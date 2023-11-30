@@ -109,7 +109,7 @@ $_SESSION['expiration'] = $expiration;
   <script>
         // Fungsi untuk menghitung mundur waktu
         function startCountdown() {
-            var seconds = 30; // Waktu awal dalam detik
+            var seconds = 300; // Waktu awal dalam detik
             var countdownElem = document.getElementById("countdown");
 
             var countdownInterval = setInterval(function() {
@@ -148,14 +148,14 @@ $_SESSION['expiration'] = $expiration;
                     <div class="card-body">
                         <p class="text-muted mb-4">Masukkan kode verifikasi Anda untuk mereset password.</p>
   <p style="color:red; text-align:center;">Peringatan Anda, harus memasukkan kode verifikasi secepatnya!</p>
-   <p style="color:red; text-align:center;">Sisa waktu: <span id="countdown">30</span></p>
+   <p style="color:red; text-align:center;">Sisa waktu: <span id="countdown">300</span></p>
     <?php
     if (isset($error_message)) {
         echo '<p style="color: red;">' . $error_message . '</p>';
     }
     ?>
    
-    <p style="text-align:center;">Kode Verifikasi <br><span style="font-weight:bold;letter-spacing:10px;"> <?= $kodeVerifikasiTerbaru ?></span></p>
+    <!-- <p style="text-align:center;">Kode Verifikasi <br><span style="font-weight:bold;letter-spacing:10px;"> <?= $kodeVerifikasiTerbaru ?></span></p> -->
     <?php endwhile; ?>
     
   <form action="" method="post">

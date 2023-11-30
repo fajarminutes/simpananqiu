@@ -58,13 +58,20 @@ function Yaaa() {
 $current_page = basename($_SERVER['PHP_SELF']);
 // Daftar kategori
 $setting = [
-    'profile.php' => ['icon' => 'fas fa-user', 'title' => 'Profile'],
-    '#' => ['icon' => 'fas fa-sign-out-alt', 'title' => 'Logout']
+    'profile.php' => ['icon' => 'fas fa-user', 'title' => 'Profile', 'path' => '../profile/'],
+    '' => ['icon' => 'fas fa-sign-out-alt', 'title' => 'Logout', 'id' => 'logoutLink', 'path' => '#']
    
 ];
 $master = [
     'k_s.php' => ['icon' => 'fas fa-tag', 'title' => 'Kategori'],
     'aset.php' => ['icon' => 'fas fa-wallet', 'title' => 'Aset'],
+   
+];
+
+$bantuan = [
+    'contact.php' => ['icon' => 'fas fa-envelope', 'title' => 'Kontak'],
+'faq.php' => ['icon' => 'fas fa-question-circle', 'title' => 'FAQ'],
+
    
 ];
 
@@ -119,10 +126,41 @@ $master = [
     </a>
 </li>
 
+<li class="nav-item">
+    <a href="../laporan/laporan.php" class="nav-link <?= ($current_page === 'laporan.php' || $current_page === 'statistik.php') ? 'active' : ''; ?>">
+        <i class="nav-icon fas fa-chart-bar"></i>
+        <p>
+            Laporan & Statistik
+        </p>
+    </a>
+</li>
+
+
 <?php 
+$target_query = "SELECT * FROM premium WHERE id_user = '$id_users'";
+    $target_result = mysqli_query($koneksi, $target_query);
+    $row = mysqli_fetch_assoc($target_result);
+
+    if (mysqli_num_rows($target_result) > 0) {
+      if($all['status'] == 1 && mysqli_num_rows($target_result) > 0) {
+    echo '<li class="nav-item">
+    <a href="../premium/invoice.php" class="nav-link' . (($current_page === 'premium.php' || $current_page === 'beli.php' || $current_page === 'invoice.php') ? ' active' : '') . '">
+        <i class="nav-icon fas fa-arrow-up"></i>
+        <p>
+            Tingkatkan Akun
+        </p>
+    </a>
+</li>';
+} else {
+
+}
+   
+
+      } else {
+
 if($all['status'] == 1) {
     echo '<li class="nav-item">
-    <a href="../premium/premium.php" class="nav-link' . (($current_page === 'premium.php' || $current_page === 'beli.php') ? ' active' : '') . '">
+    <a href="../premium/premium.php" class="nav-link' . (($current_page === 'premium.php' || $current_page === 'beli.php' || $current_page === 'invoice.php') ? ' active' : '') . '">
         <i class="nav-icon fas fa-arrow-up"></i>
         <p>
             Tingkatkan Akun
@@ -132,22 +170,34 @@ if($all['status'] == 1) {
 } else {
     // Code untuk status tidak sama dengan 1 (misalnya, status bukan 1)
 }
+      }
 ?>
 
- 
-    
-    
-     <li class="nav-item">
-        <a href="#" id="logoutLink" class="nav-link">
-            <i class="nav-icon fas fa-sign-out-alt"></i>
+
+
+     <li class="nav-item <?= (in_array($current_page, array_keys($bantuan))) ? 'menu-open' : ''; ?>">
+        <a href="#" class="nav-link <?= (in_array($current_page, array_keys($bantuan))) ? 'active' : ''; ?>">
+           <i class="nav-icon fas fa-life-ring"></i>
             <p>
-                Logout
+                Bantuan
+                <i class="fas fa-angle-left right"></i>
             </p>
         </a>
+        <ul class="nav nav-treeview">
+            <?php foreach ($bantuan as $page => $bantuan): ?>
+    <li class="nav-item">
+        <a href="../help/<?= $page ?>" class="nav-link <?= ($current_page === $page) ? 'active' : ''; ?>">
+            <i class="<?= $bantuan['icon'] ?> nav-icon"></i>
+            <p><?= $bantuan['title'] ?></p>
+        </a>
+    </li>
+<?php endforeach; ?>
+
+        </ul>
     </li>
 
     <li class="nav-item <?= (in_array($current_page, array_keys($setting))) ? 'menu-open' : ''; ?>">
-        <a href="#" class="nav-link <?= (in_array($current_page, array_keys($setting))) ? 'active' : ''; ?>">
+        <a href="#"  class="nav-link <?= (in_array($current_page, array_keys($setting))) ? 'active' : ''; ?>">
             <i class="nav-icon fas fa-cog"></i>
             <p>
                 Pengaturan
@@ -157,7 +207,7 @@ if($all['status'] == 1) {
         <ul class="nav nav-treeview">
             <?php foreach ($setting as $page => $settings): ?>
     <li class="nav-item">
-        <a href="../profile/<?= $page ?>" class="nav-link <?= ($current_page === $page) ? 'active' : ''; ?>">
+        <a href="<?= $settings['path'] ?><?= $page ?>" id="<?= $settings['id'] ?>" class="nav-link <?= ($current_page === $page) ? 'active' : ''; ?>">
             <i class="<?= $settings['icon'] ?> nav-icon"></i>
             <p><?= $settings['title'] ?></p>
         </a>

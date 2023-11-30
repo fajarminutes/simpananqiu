@@ -79,21 +79,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $query = "INSERT INTO keuangan (id_user, id_kategori, id_aset, nama_keuangan, total, catatan, deskripsi, tgl_b) VALUES ('$id_user', '$kategori',  '$aset', '$nama_keuangan', '$total', '$catatan', '$deskripsi', '$currentDateTime')";
 
                         if (mysqli_query($koneksi, $query)) {
-                            echo "Data keuangan berhasil ditambahkan.";
-                        } else {
-                            echo "Terjadi kesalahan saat menambahkan data keuangan: " . mysqli_error($koneksi);
-                        }
+    // Update kolom total di tabel aset dengan menambahkan nilai baru
+    $queryUpdateAset = "UPDATE aset SET total = total + $total WHERE id_aset = '$aset' AND id_user = '$id_user'";
+    
+    // Jalankan query untuk melakukan update di tabel aset
+    if (mysqli_query($koneksi, $queryUpdateAset)) {
+       echo "Data keuangan berhasil ditambahkan.";
+    } else {
+        echo "Terjadi kesalahan saat melakukan update total di tabel aset: " . mysqli_error($koneksi);
+    }
+
+} else {
+    echo "Terjadi kesalahan saat menambahkan data keuangan: " . mysqli_error($koneksi);
+}
                     } else {
                         // Lanjutkan dengan query untuk menambahkan data, tetapi gunakan $gambarName untuk deskripsi
                         date_default_timezone_set('Asia/Jakarta');
                         $currentDateTime = date('Y-m-d H:i:s');
                         $query = "INSERT INTO keuangan (id_user, id_kategori, id_aset, nama_keuangan, total, catatan, deskripsi, tgl_b) VALUES ('$id_user', '$kategori',  '$aset', '$nama_keuangan', '$total', '$catatan', '$gambarName', '$currentDateTime')";
 
-                        if (mysqli_query($koneksi, $query)) {
-                            echo "Data keuangan berhasil ditambahkan.";
-                        } else {
-                            echo "Terjadi kesalahan saat menambahkan data keuangan: " . mysqli_error($koneksi);
-                        }
+                         if (mysqli_query($koneksi, $query)) {
+    // Update kolom total di tabel aset dengan menambahkan nilai baru
+    $queryUpdateAset = "UPDATE aset SET total = total + $total WHERE id_aset = '$aset' AND id_user = '$id_user'";
+    
+    // Jalankan query untuk melakukan update di tabel aset
+    if (mysqli_query($koneksi, $queryUpdateAset)) {
+       echo "Data keuangan berhasil ditambahkan.";
+    } else {
+        echo "Terjadi kesalahan saat melakukan update total di tabel aset: " . mysqli_error($koneksi);
+    }
+
+} else {
+    echo "Terjadi kesalahan saat menambahkan data keuangan: " . mysqli_error($koneksi);
+}
                     }
                 }
             } else {
@@ -104,10 +122,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $query = "INSERT INTO keuangan (id_user, id_kategori, id_aset, nama_keuangan, total, catatan, deskripsi, tgl_b) VALUES ('$id_user', '$kategori',  '$aset', '$nama_keuangan', '$total', '$catatan', '$deskripsi', '$currentDateTime')";
 
                     if (mysqli_query($koneksi, $query)) {
-                        echo "Data keuangan berhasil ditambahkan.";
-                    } else {
-                        echo "Terjadi kesalahan saat menambahkan data keuangan: " . mysqli_error($koneksi);
-                    }
+    // Update kolom total di tabel aset dengan menambahkan nilai baru
+    $queryUpdateAset = "UPDATE aset SET total = total + $total WHERE id_aset = '$aset' AND id_user = '$id_user'";
+    
+    // Jalankan query untuk melakukan update di tabel aset
+    if (mysqli_query($koneksi, $queryUpdateAset)) {
+       echo "Data keuangan berhasil ditambahkan.";
+    } else {
+        echo "Terjadi kesalahan saat melakukan update total di tabel aset: " . mysqli_error($koneksi);
+    }
+
+} else {
+    echo "Terjadi kesalahan saat menambahkan data keuangan: " . mysqli_error($koneksi);
+}
                 } else {
                     // Lanjutkan dengan query untuk menambahkan data, tetapi gunakan $gambarName untuk deskripsi
                     date_default_timezone_set('Asia/Jakarta');
@@ -115,10 +142,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $query = "INSERT INTO keuangan (id_user, id_kategori, id_aset, nama_keuangan, total, catatan, deskripsi, tgl_b) VALUES ('$id_user', '$kategori',  '$aset', '$nama_keuangan', '$total', '$catatan', '$gambarName', '$currentDateTime')";
 
                     if (mysqli_query($koneksi, $query)) {
-                        echo "Data keuangan berhasil ditambahkan.";
-                    } else {
-                        echo "Terjadi kesalahan saat menambahkan data keuangan: " . mysqli_error($koneksi);
-                    }
+    // Update kolom total di tabel aset dengan menambahkan nilai baru
+    $queryUpdateAset = "UPDATE aset SET total = total + $total WHERE id_aset = '$aset' AND id_user = '$id_user'";
+    
+    // Jalankan query untuk melakukan update di tabel aset
+    if (mysqli_query($koneksi, $queryUpdateAset)) {
+       echo "Data keuangan berhasil ditambahkan.";
+    } else {
+        echo "Terjadi kesalahan saat melakukan update total di tabel aset: " . mysqli_error($koneksi);
+    }
+
+} else {
+    echo "Terjadi kesalahan saat menambahkan data keuangan: " . mysqli_error($koneksi);
+}
                 }
             }
     }

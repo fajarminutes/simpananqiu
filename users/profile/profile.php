@@ -9,7 +9,35 @@ include "../view/navbar_t.php";
 <?php 
 include "../view/sidebar_t.php";
 ?>
+ <?php 
+if (isset($_SESSION['gagal_premium'])) {
+    echo '<script>';
+    echo 'Swal.fire({';
+    echo '    position: "center",';
+    echo '    icon: "warning",';
+    echo '    title: "' . $_SESSION['gagal_premium'] . '",';
+    echo '    showConfirmButton: false,';
+    echo '    timer: 3000'; //Ini 3 detik
+    echo '});';
+    echo '</script>';
+    unset($_SESSION['gagal_premium']); // Hapus pesan dari session
+}
+?>
 
+ <?php 
+if (isset($_SESSION['gagal'])) {
+    echo '<script>';
+    echo 'Swal.fire({';
+    echo '    position: "center",';
+    echo '    icon: "warning",';
+    echo '    title: "' . $_SESSION['gagal'] . '",';
+    echo '    showConfirmButton: false,';
+    echo '    timer: 3000'; //Ini 3 detik
+    echo '});';
+    echo '</script>';
+    unset($_SESSION['gagal']); // Hapus pesan dari session
+}
+?>
 
  <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -22,7 +50,7 @@ include "../view/sidebar_t.php";
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item"><a href="../">Dashboard</a></li>
               <li class="breadcrumb-item active">Profil Pengguna</li>
             </ol>
           </div>
@@ -118,16 +146,16 @@ function updateAbout() {
             <div class="card">
               <div class="card-header p-2">
                 <ul class="nav nav-pills">
-                  <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Aktivitas</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">Waktu</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Pengaturan Akun</a></li>
+                  <!-- <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Aktivitas</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">Waktu</a></li> -->
+                  <li class="nav-item"><a class="nav-link active" href="#settings" data-toggle="tab">Pengaturan Akun</a></li>
                   <li class="nav-item"><a class="nav-link" href="../vr/" >Verifikasi 2 Langkah</a></li>
                 </ul>
               </div><!-- /.card-header -->
               <div class="card-body">
                 
                 <div class="tab-content">
-                  <div class="active tab-pane"  style="max-height: 700px; overflow-y: auto;" id="activity">
+                  <div class=" tab-pane"  style="max-height: 700px; overflow-y: auto;" id="activity">
                     <!-- Post -->
                    <div id="aktifitas" class="post">
                </div>
@@ -254,7 +282,7 @@ function Aktivitas() {
                   <!-- /.tab-pane -->
 
 
-                  <div class="tab-pane" id="settings">
+                  <div class="tab-pane active" id="settings">
 
                    <form class="form-horizontal" id="editForm" enctype="multipart/form-data">
                     <input type="hidden" class="form-control id_users" name="id_user" value="<?= $all['id_user'] ?>" id="id_user" placeholder="Name">
@@ -657,6 +685,7 @@ $('#editVerifikasi').on('click', '.EditVer', function(e) {
 </script>
 </div>
 
+
 </div>
 <!-- /.tab-content -->
 </div><!-- /.card-body -->
@@ -674,6 +703,8 @@ $('#editVerifikasi').on('click', '.EditVer', function(e) {
    <?php 
 include "../view/footer_t.php";
 ?>
+
+
 <!-- fungsi untuk melihat mata/ buka password -->
 <script>
 document.addEventListener('DOMContentLoaded', function () {

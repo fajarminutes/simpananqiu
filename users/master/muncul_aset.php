@@ -20,7 +20,7 @@ while ($d = mysqli_fetch_array($result)) {
   echo '       <p class="card-text transaksi" style="margin-bottom:-4px;">Transaksi : <b>'.$d['transaksi'].'</b>';
   echo '       <p class="card-text" style="margin-bottom:-4px;">Grup : <b>'.$d['grup'].'</b>';
   echo '       <p class="card-text" style="margin-bottom:-4px;">Nama Aset : <b>'.$d['nama_aset'].'</b>';
-  echo '       <p class="card-text" style="margin-bottom:-4px;">Total : <b>Rp '.$d['total'].'</b>';
+  echo '       <p class="card-text" style="margin-bottom:-4px;">Total : <b>Rp '.number_format($d['total'], 2, ',', '.').'</b>';
   echo '       <p class="card-text" >Deskripsi : <b>'.$d['deskripsi'].'</b>';
   echo '      <p class="card-text grup" style="display:none;">' . $d['grup'] . '</p>';
     echo '      <p class="card-text transaksi_aset" style="display:none;">' . $d['transaksi'] . '</p>';
@@ -53,7 +53,7 @@ while ($d = mysqli_fetch_array($result)) {
   echo '       <p class="card-text transaksi" style="margin-bottom:-4px;">Transaksi : <b>'.$d['transaksi'].'</b>';
   echo '       <p class="card-text" style="margin-bottom:-4px;">Grup : <b>'.$d['grup'].'</b>';
   echo '       <p class="card-text" style="margin-bottom:-4px;">Nama Aset : <b>'.$d['nama_aset'].'</b>';
-  echo '       <p class="card-text" style="margin-bottom:-4px;">Total : <b>Rp '.$d['total'].'</b>';
+  echo '       <p class="card-text" style="margin-bottom:-4px;">Total : <b>Rp '.number_format($d['total'], 2, ',', '.').'</b>';
   echo '       <p class="card-text" >Deskripsi : <b>'.$d['deskripsi'].'</b>';
   echo '      <p class="card-text grup" style="display:none;">' . $d['grup'] . '</p>';
     echo '      <p class="card-text transaksi_aset" style="display:none;">' . $d['transaksi'] . '</p>';
@@ -86,7 +86,7 @@ while ($d = mysqli_fetch_array($result)) {
   echo '       <p class="card-text transaksi" style="margin-bottom:-4px;">Transaksi : <b>'.$d['transaksi'].'</b>';
   echo '       <p class="card-text" style="margin-bottom:-4px;">Grup : <b>'.$d['grup'].'</b>';
   echo '       <p class="card-text" style="margin-bottom:-4px;">Nama Aset : <b>'.$d['nama_aset'].'</b>';
-  echo '       <p class="card-text" style="margin-bottom:-4px;">Total : <b>Rp '.$d['total'].'</b>';
+  echo '       <p class="card-text" style="margin-bottom:-4px;">Total : <b>Rp '.number_format($d['total'], 2, ',', '.').'</b>';
   echo '       <p class="card-text" >Deskripsi : <b>'.$d['deskripsi'].'</b>';
   echo '      <p class="card-text grup" style="display:none;">' . $d['grup'] . '</p>';
     echo '      <p class="card-text transaksi_aset" style="display:none;">' . $d['transaksi'] . '</p>';
@@ -117,7 +117,7 @@ while ($d = mysqli_fetch_array($result)) {
   echo '       <p class="card-text transaksi" style="margin-bottom:-4px;">Transaksi : <b>'.$d['transaksi'].'</b>';
   echo '       <p class="card-text" style="margin-bottom:-4px;">Grup : <b>'.$d['grup'].'</b>';
   echo '       <p class="card-text" style="margin-bottom:-4px;">Nama Aset : <b>'.$d['nama_aset'].'</b>';
-  echo '       <p class="card-text" style="margin-bottom:-4px;">Total : <b>Rp '.$d['total'].'</b>';
+  echo '       <p class="card-text" style="margin-bottom:-4px;">Total : <b>Rp '.number_format($d['total'], 2, ',', '.').'</b>';
   echo '       <p class="card-text" >Deskripsi : <b>'.$d['deskripsi'].'</b>';
   echo '      <p class="card-text grup" style="display:none;">' . $d['grup'] . '</p>';
     echo '      <p class="card-text transaksi_aset" style="display:none;">' . $d['transaksi'] . '</p>';

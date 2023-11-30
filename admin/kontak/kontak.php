@@ -13,8 +13,8 @@
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="../dashboard/">Dashboard</a></li>
-              <li class="breadcrumb-item active">Transaksi</li>
+              <li class="breadcrumb-item"><a href="../dashboard/dashboard.php">Dashboard</a></li>
+              <li class="breadcrumb-item active">Kontak User</li>
             </ol>
           </div>
         </div>
@@ -36,6 +36,7 @@
                     <th>Judul</th>
                     <th>Pesan</th>
                     <th>Tanggal Buat</th>
+                    <th>Status</th>
                     <th>Aksi</th>
                   </tr>
                   </thead>
@@ -83,7 +84,19 @@ while ($row = mysqli_fetch_array($query)) {
   <td><?= $row['judul']; ?></td>
   <td><?= $row['pesan']; ?></td>
   <td><?= date('d F Y H.i', strtotime($row['tgl_b'])); ?></td>
+  <td><?= $row['status'] !== '1' ? 'Halo' :  'Hai' ?></td>
   <td>
+   <?php 
+    if ($row['id_user'] == 0) {
+        echo "<a href='' class='btn btn-warning' href=''><i class='fas fa-envelope'></i></a>";
+    } else {
+        $phoneNumber = $user['no_hp'];
+        // Remove leading '0' and add '+62'
+        $whatsappLink = "https://wa.me/+62" . substr($phoneNumber, 1);
+        echo "<a class='btn btn-success' href='$whatsappLink'><i class='fab fa-whatsapp'></i></a>";
+    }
+?>
+
     <a href="#" class="btn btn-danger delete" data-id="<?= $row['id_kontak'] ?>"><i class="fa fa-trash"></i></a>
   </td>
 

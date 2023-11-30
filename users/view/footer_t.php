@@ -39,10 +39,22 @@ if (window.location.href.indexOf("beli.php") > -1) {
   document.querySelector('#tombol1').style.display = "none";
 }
 
-if (window.location.href.indexOf("transaksi.php") > -1) {
-  // Jika URL adalah "profile.php," sembunyikan elemen
-  document.querySelector('#tombol1').style.bottom = "60px";
+if (window.location.href.indexOf("invoice.php") > -1) {
+  // Jika URL adalah "invoice.php," sembunyikan elemen
+  document.querySelector('#tombol1').style.display = "none";
 }
+
+if (window.location.href.indexOf("contact.php") > -1) {
+  // Jika URL adalah "contact.php," sembunyikan elemen
+  document.querySelector('#tombol1').style.display = "none";
+}
+
+if (window.location.href.indexOf("laporan.php") > -1) {
+  // Jika URL adalah "laporan.php," sembunyikan elemen
+  document.querySelector('#tombol1').style.display = "none";
+}
+
+
 
 
 </script>
@@ -131,6 +143,7 @@ document.addEventListener("DOMContentLoaded", function () {
 <script src="../plugins/jquery-knob/jquery.knob.min.js"></script>
 <!-- Sparkline -->
 <script src="../plugins/sparklines/sparkline.js"></script>
+
 
 <script>
   $(function () {

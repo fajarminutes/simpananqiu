@@ -13,10 +13,17 @@ if ($result) {
     $status = $row["status"];
     $tgl_b = $row["tgl_b"];
     $vr = $row["vr"];
+    
 } else {
     $nama_user = "Nama Pengguna Tidak Ditemukan";
     $status = "Status Tidak Ditemukan";
     $vr = "Verifikasi Tidak Ditemukan";
+}
+
+if($row['status'] == 1) {
+$premium = '../premium/premium.php';
+} else {
+$premium = '../premium/invoice.php';
 }
 
 $profileData = "
@@ -33,7 +40,7 @@ $profileData = "
         <p class='text-muted text-center'>$username</p>
         <ul class='list-group list-group-unbordered mb-3'>
             <li class='list-group-item'>
-                <b>Status</b> <a class='float-right'>" . ($status == 1 ? "Tidak Premium" : "Premium") . "</a>
+                <b>Status</b> <a href='".$premium."' class='float-right'>" . ($status == 1 ? "Tidak Premium" : "Premium") . "</a>
             </li>
             <li class='list-group-item'>
                 <b>Verifikasi 2 Langkah</b> <a class='float-right'>" . ($vr ? "Aktif" : "Tidak Aktif") . "</a>

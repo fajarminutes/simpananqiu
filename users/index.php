@@ -5,9 +5,9 @@ include '../koneksi.php';
 
 // Periksa apakah sesi 'user_login' dan 'status_vr' sudah diinisialisasi
 if (!isset($_SESSION['user_login']) || !isset($_SESSION['status_vr'])) {
-    $_SESSION['belum_login'] = 'Anda belum login, silakan login terlebih dahulu.';
-    header("Location: ../../../simpananqiu/login/"); // Ganti dengan halaman login yang sesuai
-    exit();
+  $_SESSION['belum_login'] = 'Anda belum login, silakan login terlebih dahulu.';
+  header("Location: ../../../simpananqiu/login/"); // Ganti dengan halaman login yang sesuai
+  exit();
 }
 
 // Periksa apakah sesi 'user_login' dan 'status_vr' sudah sesuai, misalnya dengan database
@@ -24,28 +24,28 @@ $result = mysqli_stmt_get_result($stmt);
 $user = mysqli_fetch_assoc($result);
 
 if (!$user) {
-    // Jika 'id_users' dan 'status_vr' tidak sesuai dengan database, alihkan ke halaman login
-    $_SESSION['belum_login'] = 'Anda belum login, silakan login terlebih dahulu.';
-    header("Location: ../../../simpananqiu/login/"); // Ganti dengan halaman login yang sesuai
-    exit();
+  // Jika 'id_users' dan 'status_vr' tidak sesuai dengan database, alihkan ke halaman login
+  $_SESSION['belum_login'] = 'Anda belum login, silakan login terlebih dahulu.';
+  header("Location: ../../../simpananqiu/login/"); // Ganti dengan halaman login yang sesuai
+  exit();
 }
 
 // Cek apakah sesi timeout sudah diatur atau belum
 if (isset($_SESSION['user_last_activity'])) {
-    // Hitung selisih waktu
-    $now = time();
-    $user_last_activity = $_SESSION['user_last_activity'];
-    $timeout_duration = 60 * 60 * 6; // 1 hari dalam detik
+  // Hitung selisih waktu
+  $now = time();
+  $user_last_activity = $_SESSION['user_last_activity'];
+  $timeout_duration = 60 * 60 * 6; // 1 hari dalam detik
 
-    if ($now - $user_last_activity > $timeout_duration) {
-        // Matikan sesi
-        session_unset();
-        session_destroy();
+  if ($now - $user_last_activity > $timeout_duration) {
+      // Matikan sesi
+      session_unset();
+      session_destroy();
 
-       
-        header("Location: view/back_login.php"); // Ganti dengan halaman login yang sesuai
-        exit();
-    }
+      
+      header("Location: view/back_login.php"); // Ganti dengan halaman login yang sesuai
+      exit();
+  }
 }
 
 // Perbarui waktu terakhir aktivitas
@@ -67,1037 +67,550 @@ $pemasukan = mysqli_num_rows($qTP);
 $qTPP = mysqli_query($koneksi, "SELECT * FROM keuangan WHERE id_user = $id_users AND nama_keuangan = 'Pengeluaran'");
 $pengeluaran = mysqli_num_rows($qTPP); 
 ?>
+<?php 
+if (isset($_SESSION['gagal_premium'])) {
+  echo '<script>';
+  echo 'Swal.fire({';
+  echo '    position: "center",';
+  echo '    icon: "warning",';
+  echo '    title: "' . $_SESSION['gagal_premium'] . '",';
+  echo '    showConfirmButton: false,';
+  echo '    timer: 3000'; //Ini 3 detik
+  echo '});';
+  echo '</script>';
+  unset($_SESSION['gagal_premium']); // Hapus pesan dari session
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>SimpananQiu</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SimpananQiu</title>
 
-  <!-- Google Font: Source Sans Pro -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-  <!-- Sweetalert2 -->
-   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
-  <!-- Ionicons -->
-  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-  <!-- Tempusdominus Bootstrap 4 -->
-  <link rel="stylesheet" href="plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
-  <!-- iCheck -->
-  <link rel="stylesheet" href="plugins/icheck-bootstrap/icheck-bootstrap.min.css">
-  <!-- JQVMap -->
-  <link rel="stylesheet" href="plugins/jqvmap/jqvmap.min.css">
-  <!-- Theme style -->
-  <link rel="stylesheet" href="dist/css/adminlte.min.css">
-  <!-- overlayScrollbars -->
-  <link rel="stylesheet" href="plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
-  <!-- Daterange picker -->
-  <link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css">
-  <!-- summernote -->
-  <link rel="stylesheet" href="plugins/summernote/summernote-bs4.min.css">
+<!-- Google Font: Source Sans Pro -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+<!-- Sweetalert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- Font Awesome -->
+<link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+<!-- Ionicons -->
+<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+<!-- Tempusdominus Bootstrap 4 -->
+<link rel="stylesheet" href="plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+<!-- iCheck -->
+<link rel="stylesheet" href="plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+<!-- JQVMap -->
+<link rel="stylesheet" href="plugins/jqvmap/jqvmap.min.css">
+<!-- Theme style -->
+<link rel="stylesheet" href="dist/css/adminlte.min.css">
+<!-- overlayScrollbars -->
+<link rel="stylesheet" href="plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+<!-- Daterange picker -->
+<link rel="stylesheet" href="plugins/daterangepicker/daterangepicker.css">
+<!-- summernote -->
+<link rel="stylesheet" href="plugins/summernote/summernote-bs4.min.css">
 
-   <!-- Favicons -->
-  <link href="../assets/img/favicon.jpeg" rel="icon">
-  <link href="../assets/img/apple-touch-icon.png" rel="apple-touch-icon">
-  
+  <!-- Favicons -->
+<link href="../assets/img/favicon.jpeg" rel="icon">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<link href="../assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
 
-  <!-- Preloader -->
-  <div class="preloader flex-column justify-content-center align-items-center">
-    <img class="animation__shake" src="dist/img/favicon.png" alt="Logo SimpananQiu" height="200" width="200">
-  </div>
+<!-- Preloader -->
+<div class="preloader flex-column justify-content-center align-items-center">
+  <img class="animation__shake" src="dist/img/favicon.png" alt="Logo SimpananQiu" height="200" width="200">
+</div>
 
-  
+
 <!-- Navbar -->
-  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
-    <!-- Left navbar links -->
-    <ul class="navbar-nav">
-      <li class="nav-item">
-        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
-      </li>
+<nav class="main-header navbar navbar-expand navbar-white navbar-light">
+  <!-- Left navbar links -->
+  <ul class="navbar-nav">
+    <li class="nav-item">
+      <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+    </li>
+    <li class="nav-item d-none d-sm-inline-block">
+      <a href="index.php" class="nav-link">Dashboard</a>
+    </li>
+    <li class="nav-item d-none d-sm-inline-block">
+      <a href="help/contact.php" class="nav-link">Kontak</a>
+    </li>
       <li class="nav-item d-none d-sm-inline-block">
-        <a href="index.php" class="nav-link">Beranda</a>
-      </li>
-      <li class="nav-item d-none d-sm-inline-block">
-        <a href="" class="nav-link">Kontak</a>
-      </li>
-    </ul>
+      <a href="profile/profile.php" class="nav-link">Profil</a>
+    </li>
+  </ul>
 
-    <!-- Right navbar links -->
-    <ul class="navbar-nav ml-auto">
-      <!-- Navbar Search -->
-      <li class="nav-item">
-        <a class="nav-link" data-widget="navbar-search" href="#" role="button">
-          <i class="fas fa-search"></i>
-        </a>
-        <div class="navbar-search-block">
-          <form class="form-inline">
-            <div class="input-group input-group-sm">
-              <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
-              <div class="input-group-append">
-                <button class="btn btn-navbar" type="submit">
-                  <i class="fas fa-search"></i>
-                </button>
-                <button class="btn btn-navbar" type="button" data-widget="navbar-search">
-                  <i class="fas fa-times"></i>
-                </button>
-              </div>
-            </div>
-          </form>
-        </div>
-      </li>
+  <!-- Right navbar links -->
+  <ul class="navbar-nav ml-auto">
+    
+    <li class="nav-item">
+      <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+        <i class="fas fa-expand-arrows-alt"></i>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link"  href="profile/" role="button">
+          <i class="nav-icon fas fa-user"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<!-- /.navbar -->
 
-      <!-- Messages Dropdown Menu -->
-      <li class="nav-item dropdown">
-        <a class="nav-link" data-toggle="dropdown" href="#">
-          <i class="far fa-comments"></i>
-          <span class="badge badge-danger navbar-badge">3</span>
-        </a>
-        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-          <a href="#" class="dropdown-item">
-            <!-- Message Start -->
-            <div class="media">
-              <img src="dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
-              <div class="media-body">
-                <h3 class="dropdown-item-title">
-                  Brad Diesel
-                  <span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>
-                </h3>
-                <p class="text-sm">Call me whenever you can...</p>
-                <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-              </div>
-            </div>
-            <!-- Message End -->
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
-            <!-- Message Start -->
-            <div class="media">
-              <img src="dist/img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
-              <div class="media-body">
-                <h3 class="dropdown-item-title">
-                  John Pierce
-                  <span class="float-right text-sm text-muted"><i class="fas fa-star"></i></span>
-                </h3>
-                <p class="text-sm">I got your message bro</p>
-                <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-              </div>
-            </div>
-            <!-- Message End -->
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
-            <!-- Message Start -->
-            <div class="media">
-              <img src="dist/img/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
-              <div class="media-body">
-                <h3 class="dropdown-item-title">
-                  Nora Silvester
-                  <span class="float-right text-sm text-warning"><i class="fas fa-star"></i></span>
-                </h3>
-                <p class="text-sm">The subject goes here</p>
-                <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-              </div>
-            </div>
-            <!-- Message End -->
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
-        </div>
-      </li>
-      <!-- Notifications Dropdown Menu -->
-      <li class="nav-item dropdown">
-        <a class="nav-link" data-toggle="dropdown" href="#">
-          <i class="far fa-bell"></i>
-          <span class="badge badge-warning navbar-badge">15</span>
-        </a>
-        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-          <span class="dropdown-item dropdown-header">15 Notifications</span>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
-            <i class="fas fa-envelope mr-2"></i> 4 new messages
-            <span class="float-right text-muted text-sm">3 mins</span>
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
-            <i class="fas fa-users mr-2"></i> 8 friend requests
-            <span class="float-right text-muted text-sm">12 hours</span>
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
-            <i class="fas fa-file mr-2"></i> 3 new reports
-            <span class="float-right text-muted text-sm">2 days</span>
-          </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
-        </div>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" data-widget="fullscreen" href="#" role="button">
-          <i class="fas fa-expand-arrows-alt"></i>
-        </a>
-      </li>
-     <li class="nav-item">
-        <a class="nav-link"  href="#" role="button">
-           <i class="nav-icon fas fa-user"></i>
-        </a>
-        
-      </li>
-    </ul>
-  </nav>
-  <!-- /.navbar -->
+<!-- Main Sidebar Container -->
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+  <!-- Brand Logo -->
+  <a href="" class="brand-link">
+    <img src="dist/img/favicon.jpeg" alt="Logo SimpananQiu" class="brand-image img-circle elevation-3" style="opacity: .8">
+    <span class="brand-text font-weight-light">SimpananQiu</span>
+  </a>
 
-  <!-- Main Sidebar Container -->
-  <aside class="main-sidebar sidebar-dark-primary elevation-4">
-    <!-- Brand Logo -->
-   <a href="" class="brand-link">
-      <img src="dist/img/favicon.jpeg" alt="Logo SimpananQiu" class="brand-image img-circle elevation-3" style="opacity: .8">
-      <span class="brand-text font-weight-light">SimpananQiu</span>
-    </a>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <!-- Sidebar user panel (optional) -->
+    <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+      <div class="image">
+        <img src="../data/img/users/<?= $all['foto'] ?>" class="img-circle elevation-2" alt="User Image">
+      </div>
+      <div class="info">
+        <a href="profile/profile.php" class="d-block"><?= $all['username'] ?></a>
+      </div>
+    </div>
 
-    <!-- Sidebar -->
-    <div class="sidebar">
-      <!-- Sidebar user panel (optional) -->
-      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-        <div class="image">
-          <img src="../data/img/users/<?= $all['foto'] ?>" class="img-circle elevation-2" alt="User Image">
-        </div>
-        <div class="info">
-          <a href="profile/profile.php" class="d-block"><?= $all['username'] ?></a>
+  <!-- SidebarSearch Form -->
+    <div class="form-inline">
+      <div class="input-group" data-widget="sidebar-search">
+        <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+        <div class="input-group-append">
+          <button class="btn btn-sidebar">
+            <i class="fas fa-search fa-fw"></i>
+          </button>
         </div>
       </div>
+    </div>
 
-      <!-- SidebarSearch Form -->
-      <div class="form-inline">
-        <div class="input-group" data-widget="sidebar-search">
-          <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
-          <div class="input-group-append">
-            <button class="btn btn-sidebar">
-              <i class="fas fa-search fa-fw"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Sidebar Menu -->
-      <nav class="mt-2">
-      <?php
+    <!-- Sidebar Menu -->
+    <nav class="mt-2">
+    <?php
 // Dapatkan nama file skrip PHP saat ini
 $current_page = basename($_SERVER['PHP_SELF']);
+// Daftar kategori
+$setting = [
+  'profile.php' => ['icon' => 'fas fa-user', 'title' => 'Profile', 'path' => 'profile/'],
+  '' => ['icon' => 'fas fa-sign-out-alt', 'title' => 'Logout', 'id' => 'logoutLink', 'path' => '#']
+  
+];
+$master = [
+  'k_s.php' => ['icon' => 'fas fa-tag', 'title' => 'Kategori'],
+  'aset.php' => ['icon' => 'fas fa-wallet', 'title' => 'Aset'],
+  
+];
+
+$bantuan = [
+  'contact.php' => ['icon' => 'fas fa-envelope', 'title' => 'Kontak'],
+'faq.php' => ['icon' => 'fas fa-question-circle', 'title' => 'FAQ'],
+
+  
+];
+
 ?>
 
 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-    <li class="nav-item ">
-        <a href="index.php" class="nav-link <?= (isset($current_page) && $current_page === 'index.php') ? 'active' : ''; ?>">
-            <i class="nav-icon fas fa-tachometer-alt"></i>
-            <p>
-                Dashboard
-            </p>
-        </a>
-    </li>
+  <li class="nav-item">
+      <a href="index.php" class="nav-link <?= ($current_page === 'index.php') ? 'active' : ''; ?>">
+          <i class="nav-icon fas fa-tachometer-alt"></i>
+          <p>
+              Dashboard
+          </p>
+      </a>
+  </li>
+    <li class="nav-item <?= (in_array($current_page, array_keys($master))) ? 'menu-open' : ''; ?>">
+      <a href="#" class="nav-link <?= (in_array($current_page, array_keys($master))) ? 'active' : ''; ?>">
+          <i class="nav-icon fas fa-folder"></i>
+          <p>
+              Master Data
+              <i class="fas fa-angle-left right"></i>
+          </p>
+      </a>
+      <ul class="nav nav-treeview">
+          <?php foreach ($master as $page => $master): ?>
+  <li class="nav-item">
+      <a href="master/<?= $page ?>" class="nav-link <?= ($current_page === $page) ? 'active' : ''; ?>">
+          <i class="<?= $master['icon'] ?> nav-icon"></i>
+          <p><?= $master['title'] ?></p>
+      </a>
+  </li>
+<?php endforeach; ?>
 
-       <li class="nav-item">
-        <a href="master/k_s.php" class="nav-link <?= (isset($current_page) && $current_page === 'k_s') ? 'active' : ''; ?>">
-            <i class="nav-icon fas fa-tag"></i>
-            <p>
-              Kategori
-            </p>
-        </a>
-        
-    </li>
+      </ul>
+  </li>
 
-    <li class="nav-item">
-        <a href="transaksi/transaksi.php" class="nav-link <?= (isset($current_page) && $current_page === 'transaksi.php') ? 'active' : ''; ?>">
-            <i class="nav-icon fas fa-dollar-sign"></i>
-            <p>
-                Transaksi
-            </p>
-        </a>
-    </li>
+  <li class="nav-item">
+      <a href="transaksi/transaksi.php" class="nav-link <?= ($current_page === 'transaksi.php' || $current_page === 'update.php') ? 'active' : ''; ?>
+">
+          <i class="nav-icon fas fa-dollar-sign"></i>
+          <p>
+              Transaksi
+          </p>
+      </a>
+  </li>
 
+  <li class="nav-item">
+  <a href="tabungan/tabungan.php" class="nav-link <?= ($current_page === 'tabungan.php' || $current_page === 'catat_tabungan.php') ? 'active' : ''; ?>">
+      <i class="nav-icon fas fa-piggy-bank"></i>
+      <p>
+          Target Menabung
+      </p>
+  </a>
+</li>
+
+<li class="nav-item">
+  <a href="laporan/laporan.php" class="nav-link <?= ($current_page === 'laporan.php' || $current_page === 'statistik.php') ? 'active' : ''; ?>">
+      <i class="nav-icon fas fa-chart-bar"></i>
+      <p>
+          Laporan & Statistik
+      </p>
+  </a>
+</li>
+
+<?php 
+$target_query = "SELECT * FROM premium WHERE id_user = '$id_users'";
+  $target_result = mysqli_query($koneksi, $target_query);
+  $row = mysqli_fetch_assoc($target_result);
+
+  if (mysqli_num_rows($target_result) > 0) {
+    if($all['status'] == 1 && mysqli_num_rows($target_result) > 0) {
+  echo '<li class="nav-item">
+  <a href="premium/invoice.php" class="nav-link' . (($current_page === 'premium.php' || $current_page === 'beli.php' || $current_page === 'invoice.php') ? ' active' : '') . '">
+      <i class="nav-icon fas fa-arrow-up"></i>
+      <p>
+          Tingkatkan Akun
+      </p>
+  </a>
+</li>';
+} else {
+
+}
   
 
-     <li class="nav-item">
-        <a href="profile/profile.php" class="nav-link <?= (isset($current_page) && $current_page === 'profile.php') ? 'active' : ''; ?>">
-            <i class="nav-icon fas fa-user"></i>
-            <p>
-                Profile
-            </p>
-        </a>
-    </li>
+    } else {
 
-     <li class="nav-item">
-        <a href="#" id="logoutLink" class="nav-link">
-            <i class="nav-icon fas fa-sign-out-alt"></i>
-            <p>
-                Logout
-            </p>
-        </a>
-    </li>
+if($all['status'] == 1) {
+  echo '<li class="nav-item">
+  <a href="premium/premium.php" class="nav-link' . (($current_page === 'premium.php' || $current_page === 'beli.php' || $current_page === 'invoice.php') ? ' active' : '') . '">
+      <i class="nav-icon fas fa-arrow-up"></i>
+      <p>
+          Tingkatkan Akun
+      </p>
+  </a>
+</li>';
+} else {
+  // Code untuk status tidak sama dengan 1 (misalnya, status bukan 1)
+}
+    }
+?>
+
+
+
+    <li class="nav-item <?= (in_array($current_page, array_keys($bantuan))) ? 'menu-open' : ''; ?>">
+      <a href="#" class="nav-link <?= (in_array($current_page, array_keys($bantuan))) ? 'active' : ''; ?>">
+          <i class="nav-icon fas fa-life-ring"></i>
+          <p>
+              Bantuan
+              <i class="fas fa-angle-left right"></i>
+          </p>
+      </a>
+      <ul class="nav nav-treeview">
+          <?php foreach ($bantuan as $page => $bantuan): ?>
+  <li class="nav-item">
+      <a href="help/<?= $page ?>" class="nav-link <?= ($current_page === $page) ? 'active' : ''; ?>">
+          <i class="<?= $bantuan['icon'] ?> nav-icon"></i>
+          <p><?= $bantuan['title'] ?></p>
+      </a>
+  </li>
+<?php endforeach; ?>
+
+      </ul>
+  </li>
+
+  <li class="nav-item <?= (in_array($current_page, array_keys($setting))) ? 'menu-open' : ''; ?>">
+      <a href="#"  class="nav-link <?= (in_array($current_page, array_keys($setting))) ? 'active' : ''; ?>">
+          <i class="nav-icon fas fa-cog"></i>
+          <p>
+              Pengaturan
+              <i class="fas fa-angle-left right"></i>
+          </p>
+      </a>
+      <ul class="nav nav-treeview">
+          <?php foreach ($setting as $page => $settings): ?>
+  <li class="nav-item">
+      <a href="<?= $settings['path'] ?><?= $page ?>" id="<?= $settings['id'] ?>" class="nav-link <?= ($current_page === $page) ? 'active' : ''; ?>">
+          <i class="<?= $settings['icon'] ?> nav-icon"></i>
+          <p><?= $settings['title'] ?></p>
+      </a>
+  </li>
+<?php endforeach; ?>
+
+      </ul>
+  </li>
+
+    
 
 </ul>
 
-      </nav>
-      <!-- /.sidebar-menu -->
-    </div>
-    <!-- /.sidebar -->
-  </aside>
+    </nav>
+    <!-- /.sidebar-menu -->
+  </div>
+  <!-- /.sidebar -->
+</aside>
 
-  <script>
+<script>
 document.getElementById('logoutLink').addEventListener('click', function (e) {
-    e.preventDefault();
+  e.preventDefault();
 
-    Swal.fire({
-        title: 'Apakah Anda yakin ingin logout?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Ya',
-        cancelButtonText: 'Tidak',
-    }).then((result) => {
-        if (result.isConfirmed) {
-            window.location.href = '../logout.php';
-        }
-    });
+  Swal.fire({
+      title: 'Apakah Anda yakin ingin logout?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Ya',
+      cancelButtonText: 'Tidak',
+  }).then((result) => {
+      if (result.isConfirmed) {
+          window.location.href = '../logout.php';
+      }
+  });
 });
 </script>
 
 <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1 class="m-0">Beranda</h1>
-          </div><!-- /.col -->
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="">Beranda</a></li>
-            </ol>
-          </div><!-- /.col -->
-        </div><!-- /.row -->
-      </div><!-- /.container-fluid -->
-    </div>
-    <!-- /.content-header -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0">Dashboard</h1>
+        </div><!-- /.col -->
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="">Dashboard</a></li>
+          </ol>
+        </div><!-- /.col -->
+      </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+  </div>
+  <!-- /.content-header -->
 
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-        <!-- Small boxes (Stat box) -->
-        <div class="row">
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-info">
-              <div class="inner">
-                <h3><?= $kategori ?></h3>
+  <!-- Main content -->
+  <section class="content">
+    <div class="container-fluid">
+      <!-- Small boxes (Stat box) -->
+      <div class="row">
+        <div class="col-lg-3 col-6">
+          <!-- small box -->
+          <div class="small-box bg-info">
+            <div class="inner">
+              <h3><?= $kategori ?></h3>
 
-                <p>Kategori</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-bag"></i>
-              </div>
-              <a href="master/k_s.php" class="small-box-footer">Lebih Lanjut <i class="fas fa-arrow-circle-right"></i></a>
+              <p>Kategori</p>
             </div>
-          </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-success">
-              <div class="inner">
-                <h3><?= $aset ?></h3>
-
-                <p>Aset</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-stats-bars"></i>
-              </div>
-              <a href="master/aset.php" class="small-box-footer">Lebih Lanjut <i class="fas fa-arrow-circle-right"></i></a>
+            <div class="icon">
+              <i class="ion ion-bag"></i>
             </div>
+            <a href="master/k_s.php" class="small-box-footer">Lebih Lanjut <i class="fas fa-arrow-circle-right"></i></a>
           </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-warning">
-              <div class="inner">
-                <h3>
-                  <?= $pemasukan ?>
-                </h3>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-6">
+          <!-- small box -->
+          <div class="small-box bg-success">
+            <div class="inner">
+              <h3><?= $aset ?></h3>
 
-                <p>Transaksi Pemasukan</p>
-              </div>
-              <div class="icon">
-    <i class="fas fa-dollar-sign"></i>
+              <p>Aset</p>
+            </div>
+            <div class="icon">
+              <i class="ion ion-stats-bars"></i>
+            </div>
+            <a href="master/aset.php" class="small-box-footer">Lebih Lanjut <i class="fas fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-6">
+          <!-- small box -->
+          <div class="small-box bg-warning">
+            <div class="inner">
+              <h3>
+                <?= $pemasukan ?>
+              </h3>
+
+              <p>Transaksi Pemasukan</p>
+            </div>
+            <div class="icon">
+  <i class="fas fa-dollar-sign"></i>
 </div>
 
-              <a href="transaksi/transaksi.php" class="small-box-footer">Lebih Lanjut <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
+            <a href="transaksi/transaksi.php" class="small-box-footer">Lebih Lanjut <i class="fas fa-arrow-circle-right"></i></a>
           </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-primary">
-              <div class="inner">
-                <h3>
-                  <?= $pengeluaran ?>
-                </h3>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-6">
+          <!-- small box -->
+          <div class="small-box bg-primary">
+            <div class="inner">
+              <h3>
+                <?= $pengeluaran ?>
+              </h3>
 
-                <p>Transaksi Pengeluaran</p>
-              </div>
-              <div class="icon">
-    <i class="fas fa-dollar-sign"></i>
+              <p>Transaksi Pengeluaran</p>
+            </div>
+            <div class="icon">
+  <i class="fas fa-dollar-sign"></i>
 </div>
 
-              <a href="transaksi/transaksi.php" class="small-box-footer">Lebih Lanjut <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
+            <a href="transaksi/transaksi.php" class="small-box-footer">Lebih Lanjut <i class="fas fa-arrow-circle-right"></i></a>
           </div>
-          <!-- ./col -->
+        </div>
+        <!-- ./col -->
 
-           <div class="col-lg-4 col-12">
-            <!-- small box -->
-            <div class="small-box bg-light">
-              <div class="inner">
-                  <?php
+          <div class="col-lg-4 col-12">
+          <!-- small box -->
+          <div class="small-box bg-light">
+            <div class="inner">
+                <?php
 $query = mysqli_query($koneksi, "SELECT id_user, nama_keuangan, SUM(total) as total_keuangan FROM keuangan WHERE id_user = '$id_users' AND nama_keuangan = 'Pemasukan'");
 
 if (mysqli_num_rows($query) > 0) {
-    $row = mysqli_fetch_array($query);
-    $total_keuangan_p = 'Rp ' . number_format($row['total_keuangan'], 2, ',', '.');
+  $row = mysqli_fetch_array($query);
+  $total_keuangan_p = 'Rp ' . number_format($row['total_keuangan'], 2, ',', '.');
 
 ?>
-    <p style="margin-bottom:-5px;font-weight:bold;">Pemasukan</p>
-    <?php
-    if ($total_keuangan_p !== NULL) {
-        echo '<h3  style="color:green;font-weight:bold;">' . $total_keuangan_p . '</h3>';
-    } else {
-        echo '<h3 style="color:green;font-weight:bold;">0</h3>';
-    }
-    ?>
+  <p style="margin-bottom:-5px;font-weight:bold;">Pemasukan</p>
+  <?php
+  if ($total_keuangan_p !== NULL) {
+      echo '<h3  style="color:green;font-weight:bold;">' . $total_keuangan_p . '</h3>';
+  } else {
+      echo '<h3 style="color:green;font-weight:bold;">0</h3>';
+  }
+  ?>
 <?php
 } else {
-    echo "Tidak ada data yang sesuai dengan kriteria.";
+  echo "Tidak ada data yang sesuai dengan kriteria.";
 }
 ?>
 
-                <p>Total Pemasukan</p>
-              </div>
-              <div class="icon">
-    <i class="fas fa-dollar-sign"></i>
+              <p>Total Pemasukan</p>
+            </div>
+            <div class="icon">
+  <i class="fas fa-dollar-sign"></i>
 </div>
 
-              <!-- <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> -->
-            </div>
+            <!-- <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> -->
           </div>
-          <!-- ./col -->
+        </div>
+        <!-- ./col -->
 
-           <div class="col-lg-4 col-12">
-            <!-- small box -->
-            <div class="small-box bg-light">
-              <div class="inner">
-                 <?php
+          <div class="col-lg-4 col-12">
+          <!-- small box -->
+          <div class="small-box bg-light">
+            <div class="inner">
+                <?php
 $query = mysqli_query($koneksi, "SELECT id_user, nama_keuangan, SUM(total) as total_keuangan FROM keuangan WHERE id_user = '$id_users' AND nama_keuangan = 'Pengeluaran'");
 
 if (mysqli_num_rows($query) > 0) {
-    $row = mysqli_fetch_array($query);
-    $total_keuangan_p = 'Rp ' . number_format($row['total_keuangan'], 2, ',', '.');
+  $row = mysqli_fetch_array($query);
+  $total_keuangan_p = 'Rp ' . number_format($row['total_keuangan'], 2, ',', '.');
 
 ?>
-    <p style="margin-bottom:-5px;font-weight:bold;">Pengeluaran</p>
-    <?php
-    if ($total_keuangan_p !== NULL) {
-        echo '<h3  style="color:red;font-weight:bold;">' . $total_keuangan_p . '</h3>';
-    } else {
-        echo '<h3 style="color:red;font-weight:bold;">0</h3>';
-    }
-    ?>
+  <p style="margin-bottom:-5px;font-weight:bold;">Pengeluaran</p>
+  <?php
+  if ($total_keuangan_p !== NULL) {
+      echo '<h3  style="color:red;font-weight:bold;">' . $total_keuangan_p . '</h3>';
+  } else {
+      echo '<h3 style="color:red;font-weight:bold;">0</h3>';
+  }
+  ?>
 <?php
 } else {
-    echo "Tidak ada data yang sesuai dengan kriteria.";
+  echo "Tidak ada data yang sesuai dengan kriteria.";
 }
 ?>
 
-                <p>Total Pengeluaran</p>
-              </div>
-              <div class="icon">
-    <i class="fas fa-dollar-sign"></i>
+              <p>Total Pengeluaran</p>
+            </div>
+            <div class="icon">
+  <i class="fas fa-dollar-sign"></i>
 </div>
 
-              <!-- <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> -->
-            </div>
+            <!-- <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> -->
           </div>
-          <!-- ./col -->
+        </div>
+        <!-- ./col -->
 
 
-           <div class="col-lg-4 col-12">
-            <!-- small box -->
-            <div class="small-box bg-light">
-              <div class="inner">
-                  <?php 
-  $query_p = mysqli_query($koneksi, "SELECT id_user, nama_keuangan, SUM(total) as total_keuangan
-  FROM keuangan WHERE id_user = '$id_users' AND nama_keuangan = 'Pengeluaran'");
-  
-  while ($row_p = mysqli_fetch_array($query_p)) {
-    $total_keuangan_p = $row_p['total_keuangan'];
+          <div class="col-lg-4 col-12">
+          <!-- small box -->
+          <div class="small-box bg-light">
+            <div class="inner">
+                <?php 
+$query_p = mysqli_query($koneksi, "SELECT id_user, nama_keuangan, SUM(total) as total_keuangan
+FROM keuangan WHERE id_user = '$id_users' AND nama_keuangan = 'Pengeluaran'");
 
-    $query = mysqli_query($koneksi, "SELECT id_user, nama_keuangan, SUM(total) as total_keuangan
-    FROM keuangan WHERE id_user = '$id_users' AND nama_keuangan = 'Pemasukan'");
-  
-    while ($row = mysqli_fetch_array($query)) {
-      $total_keuangan = $row['total_keuangan'];
+while ($row_p = mysqli_fetch_array($query_p)) {
+  $total_keuangan_p = $row_p['total_keuangan'];
+
+  $query = mysqli_query($koneksi, "SELECT id_user, nama_keuangan, SUM(total) as total_keuangan
+  FROM keuangan WHERE id_user = '$id_users' AND nama_keuangan = 'Pemasukan'");
+
+  while ($row = mysqli_fetch_array($query)) {
+    $total_keuangan = $row['total_keuangan'];
+    
+    $selisih = $total_keuangan - $total_keuangan_p;
+    $formattedSelisih = 'Rp ' . number_format($selisih, 2, ',', '.');
+?>
+  <p style="margin-bottom:-5px;font-weight:bold;">Total</p>
+
+<h3><?= $formattedSelisih ?></h3>
+              <p>Total Semuanya</p>
+              <?php }}?>
+            </div>
+            <div class="icon">
+  <i class="fas fa-dollar-sign"></i>
+</div>
+
+            <!-- <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> -->
+          </div>
+        </div>
+        <!-- ./col -->
+      </div>
+      <!-- /.row -->
+      <!-- Main row -->
       
-      $selisih = $total_keuangan - $total_keuangan_p;
-      $formattedSelisih = 'Rp ' . number_format($selisih, 2, ',', '.');
-  ?>
-    <p style="margin-bottom:-5px;font-weight:bold;">Total</p>
-
-  <h3><?= $formattedSelisih ?></h3>
-                <p>Total Semuanya</p>
-                <?php }}?>
-              </div>
-              <div class="icon">
-    <i class="fas fa-dollar-sign"></i>
+      <!-- /.row (main row) -->
+    </div><!-- /.container-fluid -->
+  </section>
+  <!-- /.content -->
 </div>
+<!-- /.content-wrapper -->
 
-              <!-- <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> -->
-            </div>
-          </div>
-          <!-- ./col -->
-        </div>
-        <!-- /.row -->
-        <!-- Main row -->
-        <div class="row">
-          <!-- Left col -->
-          <section class="col-lg-7 connectedSortable">
-            <!-- Custom tabs (Charts with tabs)-->
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">
-                  <i class="fas fa-chart-pie mr-1"></i>
-                  Sales
-                </h3>
-                <div class="card-tools">
-                  <ul class="nav nav-pills ml-auto">
-                    <li class="nav-item">
-                      <a class="nav-link active" href="#revenue-chart" data-toggle="tab">Area</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="#sales-chart" data-toggle="tab">Donut</a>
-                    </li>
-                  </ul>
-                </div>
-              </div><!-- /.card-header -->
-              <div class="card-body">
-                <div class="tab-content p-0">
-                  <!-- Morris chart - Sales -->
-                  <div class="chart tab-pane active" id="revenue-chart"
-                       style="position: relative; height: 300px;">
-                      <canvas id="revenue-chart-canvas" height="300" style="height: 300px;"></canvas>
-                   </div>
-                  <div class="chart tab-pane" id="sales-chart" style="position: relative; height: 300px;">
-                    <canvas id="sales-chart-canvas" height="300" style="height: 300px;"></canvas>
-                  </div>
-                </div>
-              </div><!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-
-            <!-- DIRECT CHAT -->
-            <div class="card direct-chat direct-chat-primary">
-              <div class="card-header">
-                <h3 class="card-title">Direct Chat</h3>
-
-                <div class="card-tools">
-                  <span title="3 New Messages" class="badge badge-primary">3</span>
-                  <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                    <i class="fas fa-minus"></i>
-                  </button>
-                  <button type="button" class="btn btn-tool" title="Contacts" data-widget="chat-pane-toggle">
-                    <i class="fas fa-comments"></i>
-                  </button>
-                  <button type="button" class="btn btn-tool" data-card-widget="remove">
-                    <i class="fas fa-times"></i>
-                  </button>
-                </div>
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body">
-                <!-- Conversations are loaded here -->
-                <div class="direct-chat-messages">
-                  <!-- Message. Default to the left -->
-                  <div class="direct-chat-msg">
-                    <div class="direct-chat-infos clearfix">
-                      <span class="direct-chat-name float-left">Alexander Pierce</span>
-                      <span class="direct-chat-timestamp float-right">23 Jan 2:00 pm</span>
-                    </div>
-                    <!-- /.direct-chat-infos -->
-                    <img class="direct-chat-img" src="dist/img/user1-128x128.jpg" alt="message user image">
-                    <!-- /.direct-chat-img -->
-                    <div class="direct-chat-text">
-                      Is this template really for free? That's unbelievable!
-                    </div>
-                    <!-- /.direct-chat-text -->
-                  </div>
-                  <!-- /.direct-chat-msg -->
-
-                  <!-- Message to the right -->
-                  <div class="direct-chat-msg right">
-                    <div class="direct-chat-infos clearfix">
-                      <span class="direct-chat-name float-right">Sarah Bullock</span>
-                      <span class="direct-chat-timestamp float-left">23 Jan 2:05 pm</span>
-                    </div>
-                    <!-- /.direct-chat-infos -->
-                    <img class="direct-chat-img" src="dist/img/user3-128x128.jpg" alt="message user image">
-                    <!-- /.direct-chat-img -->
-                    <div class="direct-chat-text">
-                      You better believe it!
-                    </div>
-                    <!-- /.direct-chat-text -->
-                  </div>
-                  <!-- /.direct-chat-msg -->
-
-                  <!-- Message. Default to the left -->
-                  <div class="direct-chat-msg">
-                    <div class="direct-chat-infos clearfix">
-                      <span class="direct-chat-name float-left">Alexander Pierce</span>
-                      <span class="direct-chat-timestamp float-right">23 Jan 5:37 pm</span>
-                    </div>
-                    <!-- /.direct-chat-infos -->
-                    <img class="direct-chat-img" src="dist/img/user1-128x128.jpg" alt="message user image">
-                    <!-- /.direct-chat-img -->
-                    <div class="direct-chat-text">
-                      Working with AdminLTE on a great new app! Wanna join?
-                    </div>
-                    <!-- /.direct-chat-text -->
-                  </div>
-                  <!-- /.direct-chat-msg -->
-
-                  <!-- Message to the right -->
-                  <div class="direct-chat-msg right">
-                    <div class="direct-chat-infos clearfix">
-                      <span class="direct-chat-name float-right">Sarah Bullock</span>
-                      <span class="direct-chat-timestamp float-left">23 Jan 6:10 pm</span>
-                    </div>
-                    <!-- /.direct-chat-infos -->
-                    <img class="direct-chat-img" src="dist/img/user3-128x128.jpg" alt="message user image">
-                    <!-- /.direct-chat-img -->
-                    <div class="direct-chat-text">
-                      I would love to.
-                    </div>
-                    <!-- /.direct-chat-text -->
-                  </div>
-                  <!-- /.direct-chat-msg -->
-
-                </div>
-                <!--/.direct-chat-messages-->
-
-                <!-- Contacts are loaded here -->
-                <div class="direct-chat-contacts">
-                  <ul class="contacts-list">
-                    <li>
-                      <a href="#">
-                        <img class="contacts-list-img" src="dist/img/user1-128x128.jpg" alt="User Avatar">
-
-                        <div class="contacts-list-info">
-                          <span class="contacts-list-name">
-                            Count Dracula
-                            <small class="contacts-list-date float-right">2/28/2015</small>
-                          </span>
-                          <span class="contacts-list-msg">How have you been? I was...</span>
-                        </div>
-                        <!-- /.contacts-list-info -->
-                      </a>
-                    </li>
-                    <!-- End Contact Item -->
-                    <li>
-                      <a href="#">
-                        <img class="contacts-list-img" src="dist/img/user7-128x128.jpg" alt="User Avatar">
-
-                        <div class="contacts-list-info">
-                          <span class="contacts-list-name">
-                            Sarah Doe
-                            <small class="contacts-list-date float-right">2/23/2015</small>
-                          </span>
-                          <span class="contacts-list-msg">I will be waiting for...</span>
-                        </div>
-                        <!-- /.contacts-list-info -->
-                      </a>
-                    </li>
-                    <!-- End Contact Item -->
-                    <li>
-                      <a href="#">
-                        <img class="contacts-list-img" src="dist/img/user3-128x128.jpg" alt="User Avatar">
-
-                        <div class="contacts-list-info">
-                          <span class="contacts-list-name">
-                            Nadia Jolie
-                            <small class="contacts-list-date float-right">2/20/2015</small>
-                          </span>
-                          <span class="contacts-list-msg">I'll call you back at...</span>
-                        </div>
-                        <!-- /.contacts-list-info -->
-                      </a>
-                    </li>
-                    <!-- End Contact Item -->
-                    <li>
-                      <a href="#">
-                        <img class="contacts-list-img" src="dist/img/user5-128x128.jpg" alt="User Avatar">
-
-                        <div class="contacts-list-info">
-                          <span class="contacts-list-name">
-                            Nora S. Vans
-                            <small class="contacts-list-date float-right">2/10/2015</small>
-                          </span>
-                          <span class="contacts-list-msg">Where is your new...</span>
-                        </div>
-                        <!-- /.contacts-list-info -->
-                      </a>
-                    </li>
-                    <!-- End Contact Item -->
-                    <li>
-                      <a href="#">
-                        <img class="contacts-list-img" src="dist/img/user6-128x128.jpg" alt="User Avatar">
-
-                        <div class="contacts-list-info">
-                          <span class="contacts-list-name">
-                            John K.
-                            <small class="contacts-list-date float-right">1/27/2015</small>
-                          </span>
-                          <span class="contacts-list-msg">Can I take a look at...</span>
-                        </div>
-                        <!-- /.contacts-list-info -->
-                      </a>
-                    </li>
-                    <!-- End Contact Item -->
-                    <li>
-                      <a href="#">
-                        <img class="contacts-list-img" src="dist/img/user8-128x128.jpg" alt="User Avatar">
-
-                        <div class="contacts-list-info">
-                          <span class="contacts-list-name">
-                            Kenneth M.
-                            <small class="contacts-list-date float-right">1/4/2015</small>
-                          </span>
-                          <span class="contacts-list-msg">Never mind I found...</span>
-                        </div>
-                        <!-- /.contacts-list-info -->
-                      </a>
-                    </li>
-                    <!-- End Contact Item -->
-                  </ul>
-                  <!-- /.contacts-list -->
-                </div>
-                <!-- /.direct-chat-pane -->
-              </div>
-              <!-- /.card-body -->
-              <div class="card-footer">
-                <form action="#" method="post">
-                  <div class="input-group">
-                    <input type="text" name="message" placeholder="Type Message ..." class="form-control">
-                    <span class="input-group-append">
-                      <button type="button" class="btn btn-primary">Send</button>
-                    </span>
-                  </div>
-                </form>
-              </div>
-              <!-- /.card-footer-->
-            </div>
-            <!--/.direct-chat -->
-
-            <!-- TO DO List -->
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">
-                  <i class="ion ion-clipboard mr-1"></i>
-                  To Do List
-                </h3>
-
-                <div class="card-tools">
-                  <ul class="pagination pagination-sm">
-                    <li class="page-item"><a href="#" class="page-link">&laquo;</a></li>
-                    <li class="page-item"><a href="#" class="page-link">1</a></li>
-                    <li class="page-item"><a href="#" class="page-link">2</a></li>
-                    <li class="page-item"><a href="#" class="page-link">3</a></li>
-                    <li class="page-item"><a href="#" class="page-link">&raquo;</a></li>
-                  </ul>
-                </div>
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body">
-                <ul class="todo-list" data-widget="todo-list">
-                  <li>
-                    <!-- drag handle -->
-                    <span class="handle">
-                      <i class="fas fa-ellipsis-v"></i>
-                      <i class="fas fa-ellipsis-v"></i>
-                    </span>
-                    <!-- checkbox -->
-                    <div  class="icheck-primary d-inline ml-2">
-                      <input type="checkbox" value="" name="todo1" id="todoCheck1">
-                      <label for="todoCheck1"></label>
-                    </div>
-                    <!-- todo text -->
-                    <span class="text">Design a nice theme</span>
-                    <!-- Emphasis label -->
-                    <small class="badge badge-danger"><i class="far fa-clock"></i> 2 mins</small>
-                    <!-- General tools such as edit or delete-->
-                    <div class="tools">
-                      <i class="fas fa-edit"></i>
-                      <i class="fas fa-trash-o"></i>
-                    </div>
-                  </li>
-                  <li>
-                    <span class="handle">
-                      <i class="fas fa-ellipsis-v"></i>
-                      <i class="fas fa-ellipsis-v"></i>
-                    </span>
-                    <div  class="icheck-primary d-inline ml-2">
-                      <input type="checkbox" value="" name="todo2" id="todoCheck2" checked>
-                      <label for="todoCheck2"></label>
-                    </div>
-                    <span class="text">Make the theme responsive</span>
-                    <small class="badge badge-info"><i class="far fa-clock"></i> 4 hours</small>
-                    <div class="tools">
-                      <i class="fas fa-edit"></i>
-                      <i class="fas fa-trash-o"></i>
-                    </div>
-                  </li>
-                  <li>
-                    <span class="handle">
-                      <i class="fas fa-ellipsis-v"></i>
-                      <i class="fas fa-ellipsis-v"></i>
-                    </span>
-                    <div  class="icheck-primary d-inline ml-2">
-                      <input type="checkbox" value="" name="todo3" id="todoCheck3">
-                      <label for="todoCheck3"></label>
-                    </div>
-                    <span class="text">Let theme shine like a star</span>
-                    <small class="badge badge-warning"><i class="far fa-clock"></i> 1 day</small>
-                    <div class="tools">
-                      <i class="fas fa-edit"></i>
-                      <i class="fas fa-trash-o"></i>
-                    </div>
-                  </li>
-                  <li>
-                    <span class="handle">
-                      <i class="fas fa-ellipsis-v"></i>
-                      <i class="fas fa-ellipsis-v"></i>
-                    </span>
-                    <div  class="icheck-primary d-inline ml-2">
-                      <input type="checkbox" value="" name="todo4" id="todoCheck4">
-                      <label for="todoCheck4"></label>
-                    </div>
-                    <span class="text">Let theme shine like a star</span>
-                    <small class="badge badge-success"><i class="far fa-clock"></i> 3 days</small>
-                    <div class="tools">
-                      <i class="fas fa-edit"></i>
-                      <i class="fas fa-trash-o"></i>
-                    </div>
-                  </li>
-                  <li>
-                    <span class="handle">
-                      <i class="fas fa-ellipsis-v"></i>
-                      <i class="fas fa-ellipsis-v"></i>
-                    </span>
-                    <div  class="icheck-primary d-inline ml-2">
-                      <input type="checkbox" value="" name="todo5" id="todoCheck5">
-                      <label for="todoCheck5"></label>
-                    </div>
-                    <span class="text">Check your messages and notifications</span>
-                    <small class="badge badge-primary"><i class="far fa-clock"></i> 1 week</small>
-                    <div class="tools">
-                      <i class="fas fa-edit"></i>
-                      <i class="fas fa-trash-o"></i>
-                    </div>
-                  </li>
-                  <li>
-                    <span class="handle">
-                      <i class="fas fa-ellipsis-v"></i>
-                      <i class="fas fa-ellipsis-v"></i>
-                    </span>
-                    <div  class="icheck-primary d-inline ml-2">
-                      <input type="checkbox" value="" name="todo6" id="todoCheck6">
-                      <label for="todoCheck6"></label>
-                    </div>
-                    <span class="text">Let theme shine like a star</span>
-                    <small class="badge badge-secondary"><i class="far fa-clock"></i> 1 month</small>
-                    <div class="tools">
-                      <i class="fas fa-edit"></i>
-                      <i class="fas fa-trash-o"></i>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-              <!-- /.card-body -->
-              <div class="card-footer clearfix">
-                <button type="button" class="btn btn-primary float-right"><i class="fas fa-plus"></i> Add item</button>
-              </div>
-            </div>
-            <!-- /.card -->
-          </section>
-          <!-- /.Left col -->
-          <!-- right col (We are only adding the ID to make the widgets sortable)-->
-          <section class="col-lg-5 connectedSortable">
-
-            <!-- Map card -->
-            <div class="card bg-gradient-primary">
-              <div class="card-header border-0">
-                <h3 class="card-title">
-                  <i class="fas fa-map-marker-alt mr-1"></i>
-                  Visitors
-                </h3>
-                <!-- card tools -->
-                <div class="card-tools">
-                  <button type="button" class="btn btn-primary btn-sm daterange" title="Date range">
-                    <i class="far fa-calendar-alt"></i>
-                  </button>
-                  <button type="button" class="btn btn-primary btn-sm" data-card-widget="collapse" title="Collapse">
-                    <i class="fas fa-minus"></i>
-                  </button>
-                </div>
-                <!-- /.card-tools -->
-              </div>
-              <div class="card-body">
-                <div id="world-map" style="height: 250px; width: 100%;"></div>
-              </div>
-              <!-- /.card-body-->
-              <div class="card-footer bg-transparent">
-                <div class="row">
-                  <div class="col-4 text-center">
-                    <div id="sparkline-1"></div>
-                    <div class="text-white">Visitors</div>
-                  </div>
-                  <!-- ./col -->
-                  <div class="col-4 text-center">
-                    <div id="sparkline-2"></div>
-                    <div class="text-white">Online</div>
-                  </div>
-                  <!-- ./col -->
-                  <div class="col-4 text-center">
-                    <div id="sparkline-3"></div>
-                    <div class="text-white">Sales</div>
-                  </div>
-                  <!-- ./col -->
-                </div>
-                <!-- /.row -->
-              </div>
-            </div>
-            <!-- /.card -->
-
-            <!-- solid sales graph -->
-            <div class="card bg-gradient-info">
-              <div class="card-header border-0">
-                <h3 class="card-title">
-                  <i class="fas fa-th mr-1"></i>
-                  Sales Graph
-                </h3>
-
-                <div class="card-tools">
-                  <button type="button" class="btn bg-info btn-sm" data-card-widget="collapse">
-                    <i class="fas fa-minus"></i>
-                  </button>
-                  <button type="button" class="btn bg-info btn-sm" data-card-widget="remove">
-                    <i class="fas fa-times"></i>
-                  </button>
-                </div>
-              </div>
-              <div class="card-body">
-                <canvas class="chart" id="line-chart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-              </div>
-              <!-- /.card-body -->
-              <div class="card-footer bg-transparent">
-                <div class="row">
-                  <div class="col-4 text-center">
-                    <input type="text" class="knob" data-readonly="true" value="20" data-width="60" data-height="60"
-                           data-fgColor="#39CCCC">
-
-                    <div class="text-white">Mail-Orders</div>
-                  </div>
-                  <!-- ./col -->
-                  <div class="col-4 text-center">
-                    <input type="text" class="knob" data-readonly="true" value="50" data-width="60" data-height="60"
-                           data-fgColor="#39CCCC">
-
-                    <div class="text-white">Online</div>
-                  </div>
-                  <!-- ./col -->
-                  <div class="col-4 text-center">
-                    <input type="text" class="knob" data-readonly="true" value="30" data-width="60" data-height="60"
-                           data-fgColor="#39CCCC">
-
-                    <div class="text-white">In-Store</div>
-                  </div>
-                  <!-- ./col -->
-                </div>
-                <!-- /.row -->
-              </div>
-              <!-- /.card-footer -->
-            </div>
-            <!-- /.card -->
-
-            <!-- Calendar -->
-            <div class="card bg-gradient-success">
-              <div class="card-header border-0">
-
-                <h3 class="card-title">
-                  <i class="far fa-calendar-alt"></i>
-                  Calendar
-                </h3>
-                <!-- tools card -->
-                <div class="card-tools">
-                  <!-- button with a dropdown -->
-                  <div class="btn-group">
-                    <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown" data-offset="-52">
-                      <i class="fas fa-bars"></i>
-                    </button>
-                    <div class="dropdown-menu" role="menu">
-                      <a href="#" class="dropdown-item">Add new event</a>
-                      <a href="#" class="dropdown-item">Clear events</a>
-                      <div class="dropdown-divider"></div>
-                      <a href="#" class="dropdown-item">View calendar</a>
-                    </div>
-                  </div>
-                  <button type="button" class="btn btn-success btn-sm" data-card-widget="collapse">
-                    <i class="fas fa-minus"></i>
-                  </button>
-                  <button type="button" class="btn btn-success btn-sm" data-card-widget="remove">
-                    <i class="fas fa-times"></i>
-                  </button>
-                </div>
-                <!-- /. tools -->
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body pt-0">
-                <!--The calendar -->
-                <div id="calendar" style="width: 100%"></div>
-              </div>
-              <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-          </section>
-          <!-- right col -->
-        </div>
-        <!-- /.row (main row) -->
-      </div><!-- /.container-fluid -->
-    </section>
-    <!-- /.content -->
+  <footer class="main-footer">
+  <div class="float-right d-none d-sm-block">
+    <b>Version</b> 1.0.0
   </div>
-  <!-- /.content-wrapper -->
-
-   <footer class="main-footer">
-    <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong>
-    All rights reserved.
-    <div class="float-right d-none d-sm-inline-block">
-      <b>Version</b> 3.2.0
-    </div>
-  </footer>
-
-  <!-- Control Sidebar -->
-  <aside class="control-sidebar control-sidebar-dark">
-    <!-- Control sidebar content goes here -->
-  </aside>
-  <!-- /.control-sidebar -->
+  <strong>Copyright &copy;<?php echo date("Y"); ?> -<a href="">SIMPANANQIU</a>.</strong> All rights reserved.
+</footer>
+<!-- Control Sidebar -->
+<aside class="control-sidebar control-sidebar-dark">
+  <!-- Control sidebar content goes here -->
+</aside>
+<!-- /.control-sidebar -->
 </div>
 <!-- ./wrapper -->
 
@@ -1107,7 +620,7 @@ if (mysqli_num_rows($query) > 0) {
 <script src="plugins/jquery-ui/jquery-ui.min.js"></script>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
 <script>
-  $.widget.bridge('uibutton', $.ui.button)
+$.widget.bridge('uibutton', $.ui.button)
 </script>
 <!-- Bootstrap 4 -->
 <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>

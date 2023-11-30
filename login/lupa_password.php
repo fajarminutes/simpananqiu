@@ -3,6 +3,8 @@ session_start();
 // Koneksi ke database
 include '../koneksi.php';
 
+// $id_pengguna = $_SESSION['user_verifikasi'];
+
 // Eksekusi jika form dikirim
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Ambil data email dari form
@@ -14,18 +16,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $pengguna = mysqli_fetch_assoc($result);
 
     if (mysqli_num_rows($result) > 0) {
-        if($pengguna['vr'] !== NULL) {
-
-
-             // Email ditemukan, lanjutkan dengan proses reset password
+        // Email ditemukan, lanjutkan dengan proses reset password
         $_SESSION['user_verifikasi'] = $pengguna['id_user'];
 
-        // Redirect pengguna ke halaman memasukkan kode verifikasi menggunakan JavaScript
-        echo '<script>';
-        echo 'window.location.href = "check_verify.php";';
-        echo '</script>';
-        exit();
-        } else {
              // Generate dan simpan kode verifikasi 6 digit ke dalam session
         $verificationCode = rand(100000, 999999);
         $_SESSION['verification_code'] = $verificationCode;
@@ -34,8 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $email = $pengguna['email'];
         $_SESSION['verification_email'] = $email;
 
-        // Waktu kedaluwarsa dalam detik (contoh: 1/2 menit)
-        $verify = time() + 30; // 30 detik
+        // Waktu kedaluwarsa dalam detik (contoh: 5 menit)
+        $verify = time() + 300; // 300 detik
         $_SESSION['verify'] = $verify;
 
         // Simpan data di tabel ganti_password dengan id_user dari tabel users
@@ -43,8 +36,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $insertQuery = "INSERT INTO ganti_password (id_user, kode) VALUES ('$id_user', '$verificationCode')";
         mysqli_query($koneksi, $insertQuery);
     
-            header("Location: verify_code.php"); // Jika 'vr' ada datanya, arahkan ke index.php
-        }
+         $query = mysqli_query($koneksi, "SELECT * FROM ganti_password WHERE id_user = $id_user ORDER BY id_password DESC LIMIT 1");
+$ambil = mysqli_fetch_array($query);
+
+$to = $pengguna['email'];
+$subject = 'Kode Verifikasi';
+$message = $ambil['kode'];
+
+
+include 'send_email.php'; // Include file send_email.php untuk mengirim email
+
+header("Location: verify_code.php"); // Jika 'vr' ada datanya, arahkan ke index.php
+exit();
        
     } else {
         // Email tidak ditemukan, tampilkan pesan error menggunakan notifikasi bawaan dari PHP

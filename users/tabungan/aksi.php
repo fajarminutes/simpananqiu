@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $countRow = mysqli_fetch_assoc($tabunganCountResult);
         $tabunganCount = $countRow['count'];
 
-        if ($userStatus == '1') {
+        if ($userStatus == 1) {
             // Jika status pengguna adalah 0 dan jumlah tabungan mencapai batasan, tampilkan pesan harus menjadi premium
             if ($tabunganCount >= 5 ) {
                 echo "Anda harus upgrade akun ke premium";

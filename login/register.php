@@ -233,11 +233,11 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <div class="form-step step-1 active">
                                     <div class="form-group mb-3">
                                         <label for="nama">Nama Lengkap</label>
-                                        <input type="text" class="form-control" name="nama" id="nama">
+                                        <input type="text" class="form-control" placeholder="Contoh : You Example" name="nama" id="nama">
                                     </div>
                                     <div class="form-group mb-3">
     <label for="username">Username</label>
-    <input type="text" class="form-control" name="username" id="username" onkeyup="checkUsernameAvailability()">
+    <input type="text" class="form-control" name="username" id="username" placeholder="Contoh : example" onkeyup="checkUsernameAvailability()">
 </div>
 <div class="form-group mb-3" id="nextButtonContainer" style="display: none;">
     <button type="button" class="form-control btn btn-primary rounded submit px-3" onclick="nextStep(1)">Selanjutnya</button>
@@ -271,7 +271,7 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
     <div class="form-group mb-3">
         <label for="nohp">No. Hp</label>
-        <input type="number" class="form-control" name="nohp" id="nohp" oninput="checkInputValues(2)">
+        <input type="number" class="form-control" name="nohp" placeholder="Contoh : 08**********" id="nohp" oninput="checkInputValues(2)">
     </div>
     <p id="nohpWarning" style="display: none; color: red;">Nomor Hp tidak terdeteksi.</p>
     <p id="warningMessageStep2" style="display: none; color: red;">Silahkan isi data terlebih dahulu.</p>
@@ -309,7 +309,7 @@ function checkInputValues(step) {
 
                                 <div class="form-step step-3">
                                   <label for="email">Email</label>
-                                        <input type="email" class="form-control" name="email" required id="email" onkeyup="checkemail()">
+                                        <input type="email" class="form-control" placeholder="Contoh : you@example.com" name="email" required id="email" onkeyup="checkemail()">
                                         <!-- style ini untuk mata password berada di samping kanan -->
 										  <style>
   .input-container {

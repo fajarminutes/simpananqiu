@@ -7,7 +7,7 @@ $transaksi = $_GET['transaksi']; // Ambil grup dari permintaan AJAX
 switch ($transaksi) {
     case "Pemasukan":
         // Kode untuk menampilkan aset dengan grup "Pemasukan"
-        $result = mysqli_query($koneksi, "SELECT * FROM kategori WHERE (id_user = $id_users AND id_admin = 0 AND transaksi = '$transaksi') OR (id_admin = 1 AND transaksi = '$transaksi' AND id_user = 0) ORDER BY tgl_e DESC LIMIT 3");
+        $result = mysqli_query($koneksi, "SELECT * FROM kategori WHERE id_user = $id_users AND transaksi = '$transaksi'");
         while ($d = mysqli_fetch_array($result)) {
             echo '<div class="col-md-4">';
             echo '  <div class="card mb-4">';
@@ -27,7 +27,7 @@ switch ($transaksi) {
 
     case "Pengeluaran":
         // Kode untuk menampilkan aset dengan grup "Pengeluaran"
-        $result = mysqli_query($koneksi, "SELECT * FROM kategori WHERE (id_user = $id_users AND id_admin = 0 AND transaksi = '$transaksi') OR (id_admin = 1 AND transaksi = '$transaksi')");
+        $result = mysqli_query($koneksi, "SELECT * FROM kategori WHERE id_user = $id_users AND transaksi = '$transaksi'");
 
 
 

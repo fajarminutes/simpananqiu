@@ -59,7 +59,7 @@ $master = [
             </p>
         </a>
     </li>
-     <li class="nav-item <?= (in_array($current_page, array_keys($master))) ? 'menu-open' : ''; ?>">
+     <!-- <li class="nav-item <?= (in_array($current_page, array_keys($master))) ? 'menu-open' : ''; ?>">
         <a href="#" class="nav-link <?= (in_array($current_page, array_keys($master))) ? 'active' : ''; ?>">
             <i class="nav-icon fas fa-folder"></i>
             <p>
@@ -78,16 +78,17 @@ $master = [
 <?php endforeach; ?>
 
         </ul>
-    </li>
+    </li> -->
 
-    <li class="nav-item">
-        <a href="../akun/akun.php" class="nav-link <?= ($current_page === 'akun.php') ? 'active' : ''; ?>">
-            <i class="nav-icon fas fa-dollar-sign"></i>
-            <p>
-                Akun User
-            </p>
-        </a>
-    </li>
+   <li class="nav-item">
+    <a href="../akun/akun.php" class="nav-link <?= ($current_page === 'akun.php') ? 'active' : ''; ?>">
+        <i class="nav-icon fas fa-user"></i>
+        <p>
+            Akun User
+        </p>
+    </a>
+</li>
+
 
     <li class="nav-item">
     <a href="../kontak/kontak.php" class="nav-link <?= ($current_page === 'kontak.php') ? 'active' : ''; ?>">

@@ -35,6 +35,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $id_user = $pengguna['id_user'];
         $insertQuery = "INSERT INTO ganti_password (id_user, kode) VALUES ('$id_user', '$verificationCode')";
         mysqli_query($koneksi, $insertQuery);
+
+        $query = mysqli_query($koneksi, "SELECT * FROM ganti_password WHERE id_user = $id_user ORDER BY id_password DESC LIMIT 1");
+$ambil = mysqli_fetch_array($query);
+
+$to = $pengguna['email'];
+$subject = 'Kode Verifikasi';
+$message = $ambil['kode'];
+
+
+include 'send_email.php'; // Include file send_email.php untuk mengirim email
     
             header("Location: verify_code.php"); // Jika 'vr' ada datanya, arahkan ke index.php
         

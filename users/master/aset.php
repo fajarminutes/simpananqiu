@@ -303,6 +303,56 @@ if (window.innerWidth <= 768) {
 </script>
 
               </div>
+
+              <div class="card-body">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-4 col-sm-4">
+                <p style="margin-bottom:-5px;text-align:center;font-weight:bold;">Aset</p>
+                <p id="totalAset" style="color:blue;text-align:center;">Rp 0.00</p>
+            </div>
+
+            <div class="col-lg-4 col-sm-4">
+                <p style="margin-bottom:-5px;text-align:center;font-weight:bold;">Liabilitas</p>
+                <p id="totalLiabilitas" style="color:red;text-align:center;">Rp 0.00</p>
+            </div>
+
+            <div class="col-lg-4 col-sm-4">
+                <p style="margin-bottom: -5px; text-align: center; font-weight: bold;">Total</p>
+                <p id="selisihTotal" style="text-align: center;">Rp 0.00</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Pastikan library jQuery sudah disertakan -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script>
+    // Fungsi untuk memperbarui tampilan aset secara real-time
+    function updateAset() {
+        $.ajax({
+            url: 'update_aset.php',
+            method: 'GET',
+            data: { id_user: <?php echo json_encode($id_users); ?> }, // Mengirim id_user sebagai parameter
+            dataType: 'json',
+            success: function (data) {
+                // Update tampilan aset
+                $('#totalAset').text(data.totalAset);
+                $('#totalLiabilitas').text(data.totalLiabilitas);
+                $('#selisihTotal').text(data.selisihTotal);
+            },
+            error: function (error) {
+                console.log('Error:', error);
+            }
+        });
+    }
+
+    // Panggil fungsi updateAset setiap 1 detik
+    setInterval(updateAset, 1000);
+</script>
+
+
               </div>
               <!-- /.card-header -->
             

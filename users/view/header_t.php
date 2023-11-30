@@ -92,6 +92,29 @@ if ($user['status'] == 1) {
   
   <style>
 
+    .badge_own {
+        display: inline-block;
+        padding: 0.25em 0.5em;
+        font-size: 80%;
+        font-weight: bold;
+        line-height: 1;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: baseline;
+        border-radius: 0.25rem;
+    }
+
+    /* Warna latar belakang dan teks sesuai kebutuhan Anda */
+     .text-bg-warning_own {
+        background-color: #ffc107;
+        color: #212529;
+    }
+
+    .text-bg-success_own {
+        background-color: #28a745;
+        color: #fff;
+    }
+
 body{
     background:#eee;
 }

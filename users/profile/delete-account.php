@@ -21,6 +21,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
+     // Periksa apakah status pengguna dengan id_user yang sesuai adalah 0
+$statusQuery = "SELECT * FROM users WHERE id_user = '$id_users'";
+$statusResult = mysqli_query($koneksi, $statusQuery);
+$users = mysqli_fetch_assoc($statusResult);
+
+$to = $users['email'];
+$subject = 'Tentang Akun Anda';
+$nama = $users['nama_user'];
+$username = $users['username'];
+$kelamin = $users['gender'];
+$hp = $users['no_hp'];
+$tgl_b = date('d F Y', strtotime($users['tgl_b']));
+$status = $users['status'] !== '1' ? 'Premium' : 'Tidak Premium';
+
+include 'send_email.php'; // Include file send_email.php untuk mengirim email
+
+
     // Gunakan prepared statement untuk menghindari serangan SQL Injection
     $queryDeleteUser = "DELETE FROM users WHERE id_user = ?";
     $stmtDeleteUser = mysqli_prepare($koneksi, $queryDeleteUser);
@@ -43,6 +60,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
         }
+
+         // Hapus gambar dari tabel premium
+        $queryGetGambarPremium = "SELECT bukti FROM premium WHERE id_user = ?";
+        $stmtGetGambarPremium = mysqli_prepare($koneksi, $queryGetGambarPremium);
+        mysqli_stmt_bind_param($stmtGetGambarPremium, "i", $id_users);
+        mysqli_stmt_execute($stmtGetGambarPremium);
+        mysqli_stmt_store_result($stmtGetGambarPremium);
+
+        if (mysqli_stmt_num_rows($stmtGetGambarPremium) > 0) {
+            mysqli_stmt_bind_result($stmtGetGambarPremium, $gambarPremium);
+            while (mysqli_stmt_fetch($stmtGetGambarPremium)) {
+                // Hapus file gambar dari sistem file
+                if (!empty($gambarPremium) && file_exists("../../data/img/premium/$gambarPremium")) {
+                    unlink("../../data/img/premium/$gambarPremium");
+                }
+            }
+        }
+
+
+        
 
         // Hapus gambar dari tabel tabungan
         $queryGetGambarTabungan = "SELECT gambar, id_tabungan FROM tabungan WHERE id_user = ?";
@@ -68,7 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         // Hapus data dari tabel lain yang terkait
-        $tablesToDelete = array("kategori", "kontak", "premium", "keuangan", "aset");
+        $tablesToDelete = array("kategori", "kontak", "premium", "keuangan", "tabungan", "aset");
         foreach ($tablesToDelete as $table) {
             $queryDeleteTable = "DELETE FROM $table WHERE id_user = ?";
             $stmtDeleteTable = mysqli_prepare($koneksi, $queryDeleteTable);
@@ -98,6 +135,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 exit(); // Keluar dari skrip jika terjadi kesalahan penghapusan
             }
         }
+       
 
         echo 'success';
     } else {

@@ -25,6 +25,21 @@ if (isset($_SESSION['gagal'])) {
 }
 ?>
 
+
+<?php
+
+$target_query = "SELECT * FROM premium WHERE id_user = '$id_users'";
+    $target_result = mysqli_query($koneksi, $target_query);
+    $row = mysqli_fetch_assoc($target_result);
+
+    if (mysqli_num_rows($target_result) > 0) {
+       // Tidak sesuai, redirect ke halaman yang sesuai
+        $_SESSION['gagal'] = 'Opps, Anda Sudah Melakukan Pemesanan!';
+        echo '<script>window.location.href = "invoice.php";</script>';
+      } else {
+
+if($all['status'] == 1) {
+?>
  <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -36,7 +51,7 @@ if (isset($_SESSION['gagal'])) {
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item"><a href="../">Dashboard</a></li>
               <li class="breadcrumb-item active">Tingkatkan Akun</li>
             </ol>
           </div>
@@ -110,7 +125,7 @@ if (isset($_SESSION['gagal'])) {
                             <div class="price-item text-center popular">
                                 <div class="price-top">
                                     <h4>Bisnis</h4>
-                                    <h2 class="mb-0"><sup>Rp</sup>1.100.000,00</h2>
+                                    <h2 class="mb-0"><sup>Rp</sup>500.000,00</h2>
                                     <span class="text-capitalize">per Tahun</span>
                                 </div>
                                 <div class="price-content">
@@ -191,7 +206,7 @@ if (isset($_SESSION['gagal'])) {
                             <div class="price-item text-center popular">
                                 <div class="price-top">
                                     <h4>Bisnis</h4>
-                                    <h2 class="mb-0"><sup>Rp</sup>100.000,00</h2>
+                                    <h2 class="mb-0"><sup>Rp</sup>50.000,00</h2>
                                     <span class="text-capitalize">per bulan</span>
                                 </div>
                                 <div class="price-content">
@@ -241,8 +256,14 @@ if (isset($_SESSION['gagal'])) {
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
+<?php 
+} else {
+    $_SESSION['gagal_premium'] = 'Anda Sudah Meningkatkan Akun!';
+    echo '<script>window.location.href = "../profile/profile.php";</script>';
+}
+      }
 
-
+?>
 
 
  <?php 
