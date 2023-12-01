@@ -118,7 +118,7 @@ function updateAbout() {
             <div class="card">
               <div class="card-header p-2">
                 <ul class="nav nav-pills">
-                  <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Pengaturan Akun</a></li>
+                  <li class="nav-item"><a class="nav-link active" href="#settings" data-toggle="tab">Pengaturan Akun</a></li>
                 </ul>
               </div><!-- /.card-header -->
               <div class="card-body">

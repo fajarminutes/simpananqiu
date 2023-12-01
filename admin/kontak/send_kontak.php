@@ -1,4 +1,5 @@
 <?php
+session_start();
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
@@ -7,11 +8,33 @@ require '../../PHPMailer/src/Exception.php';
 require '../../PHPMailer/src/PHPMailer.php';
 require '../../PHPMailer/src/SMTP.php';
 
- // Ambil isi template email dari file eksternal
+// Fungsi untuk melakukan koneksi ke database
+
+
+if (isset($_POST['send'])) {
+    // Ambil data dari formulir
+    $id_kontak = $_POST['id_kontak'];
+    $to = $_POST['email'];
+    $subject = 'Minqiu Hadir Untuk Kamu';
+
+    date_default_timezone_set('Asia/Jakarta');
+    $waktu = date('H:i');
+
+    if ($waktu >= '00:00' && $waktu < '10:59') {
+        $ucapan = "Selamat Pagi";
+    } elseif ($waktu >= '11:00' && $waktu < '14:59') {
+        $ucapan = "Selamat Siang";
+    } elseif ($waktu >= '15:00' && $waktu < '17:59') {
+        $ucapan = "Selamat Sore";
+    } else {
+        $ucapan = "Selamat Malam";
+    }
+
+    // Ambil isi template email dari file eksternal
     $message_body = file_get_contents('email_template.php');
 
     // Gantikan placeholder dengan nilai aktual
-    $message_body = str_replace('{MESSAGE}', $message, $message_body);
+    $message_body = str_replace('{UCAPAN}', $ucapan, $message_body);
 
     // Buat instance PHPMailer
     $mail = new PHPMailer(true);
@@ -53,9 +76,30 @@ require '../../PHPMailer/src/SMTP.php';
 
         // Kirim email
         $mail->send();
-        return true;
-    } catch (Exception $e) {
-        return false;
-    }
 
+        // Set session berhasil dikirim
+        $_SESSION['email_sent'] = 'Email Berhasil Dikirim!';
+
+        // Lakukan koneksi ke database
+        include '../../koneksi.php';
+
+        // Lakukan koneksi ke database
+        $pdo = connectToDatabase();
+
+         date_default_timezone_set('Asia/Jakarta');
+                $currentDateTime = date('Y-m-d H:i:s');
+
+        // Lakukan query update
+        $updateQuery = "UPDATE kontak SET status = '2', tgl_e = '$currentDateTime' WHERE id_kontak = :id_kontak";
+        $stmt = $pdo->prepare($updateQuery);
+        $stmt->bindParam(':id_kontak', $id_kontak);
+        $stmt->execute();
+
+        // Redirect ke halaman kontak.php
+        header('Location: kontak.php');
+        exit();
+    } catch (Exception $e) {
+        echo "Email gagal dikirim. Error: {$mail->ErrorInfo}";
+    }
+}
 ?>
