@@ -308,7 +308,7 @@ Halaman ini merupakan halaman pemesanan, Silahkan mengisi data yang diperlukan.
 
  <div class="form-group">
                   <label for="keterangan">Keterangan</label>
-                   <textarea class="form-control" name="keterangan" id="keterangan" placeholder="Masukkan Keterangan" rows="3"></textarea>
+                   <textarea class="form-control" name="keterangan" id="keterangan_b" placeholder="Masukkan Keterangan" rows="3"></textarea>
                 </div>
                 
 

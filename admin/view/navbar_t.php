@@ -21,7 +21,7 @@
         </a>
       </li>
      <li class="nav-item">
-        <a class="nav-link"  href="#" role="button">
+        <a class="nav-link"  href="../profile/profile.php" role="button">
            <i class="nav-icon fas fa-user"></i>
         </a>
         

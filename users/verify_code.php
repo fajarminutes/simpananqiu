@@ -155,7 +155,7 @@ $_SESSION['expiration'] = $expiration;
     }
     ?>
    
-    <!-- <p style="text-align:center;">Kode Verifikasi <br><span style="font-weight:bold;letter-spacing:10px;"> <?= $kodeVerifikasiTerbaru ?></span></p> -->
+    <p style="text-align:center;">Kode Verifikasi <br><span style="font-weight:bold;letter-spacing:10px;"> <?= $kodeVerifikasiTerbaru ?></span></p>
     <?php endwhile; ?>
     
   <form action="" method="post">

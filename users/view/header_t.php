@@ -463,4 +463,20 @@ if ($current_page !== 'transaksi.php' && $current_page !== 'update.php') {
     </div>
     <?php
 }
+
+// Notifikasi Gagal, Tanpa khusus apapun (Opsional)
+if (isset($_SESSION['gagal'])) {
+    echo '<script>';
+    echo 'Swal.fire({';
+    echo '    position: "center",';
+    echo '    icon: "error",';
+    echo '    title: "' . $_SESSION['gagal'] . '",';
+    echo '    showConfirmButton: false,';
+    echo '    timer: 3000'; //Ini 2 detik
+    echo '});';
+    echo '</script>';
+    unset($_SESSION['gagal']); // Hapus pesan dari session
+}
 ?>
+
+

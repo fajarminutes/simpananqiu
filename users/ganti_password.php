@@ -39,7 +39,7 @@ if (isset($_POST['submit'])) {
     $id_user = $_SESSION['verifikasi'];
 
     // Redirect pengguna ke halaman lain jika diperlukan
-    header("Location: ../login/");
+    header("Location: lockscreen.php");
     exit();
 }
 

@@ -149,7 +149,15 @@ function updateAbout() {
                   <!-- <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Aktivitas</a></li>
                   <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">Waktu</a></li> -->
                   <li class="nav-item"><a class="nav-link active" href="#settings" data-toggle="tab">Pengaturan Akun</a></li>
-                  <li class="nav-item"><a class="nav-link" href="../vr/" >Verifikasi 2 Langkah</a></li>
+                <?php
+$kode_contoh = "Minqiu Selalu Ada Untuk Kamu"; // Ganti dengan nilai kode_contoh yang sesuai dari database
+$password_hash = password_hash($kode_contoh, PASSWORD_DEFAULT);
+?>
+
+<li class="nav-item"><a class="nav-link" href="../vr/kode.php?id=<?= $password_hash ?>">Verifikasi 2 Langkah</a></li>
+
+
+
                 </ul>
               </div><!-- /.card-header -->
               <div class="card-body">

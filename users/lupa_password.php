@@ -39,12 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $query = mysqli_query($koneksi, "SELECT * FROM ganti_password WHERE id_user = $id_user ORDER BY id_password DESC LIMIT 1");
 $ambil = mysqli_fetch_array($query);
 
-$to = $pengguna['email'];
-$subject = 'Kode Verifikasi';
-$message = $ambil['kode'];
 
-
-include 'send_email.php'; // Include file send_email.php untuk mengirim email
     
             header("Location: verify_code.php"); // Jika 'vr' ada datanya, arahkan ke index.php
         

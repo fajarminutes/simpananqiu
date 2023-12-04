@@ -1,7 +1,17 @@
 <?php 
 session_start();
 include "../../koneksi.php";
-$id_users = $_SESSION['user_login'];
+
+// Periksa apakah session 'user_login' sudah di-set sebelum mengaksesnya
+if (isset($_SESSION['user_login'])) {
+    $id_users = $_SESSION['user_login'];
+
+
+$target_query = "SELECT * FROM users WHERE id_user = '$id_users'";
+    $target_result = mysqli_query($koneksi, $target_query);
+    $row = mysqli_fetch_assoc($target_result);
+
+if($row['vr'] == NULL) {
 ?>
 
 <script>
@@ -129,3 +139,21 @@ function goBack() {
 <script src="../dist/js/adminlte.min.js?v=3.2.0"></script>
 </body>
 </html>
+<?php 
+} else {
+    // Tidak sesuai, redirect ke halaman yang sesuai
+    $_SESSION['gagal'] = 'Opps, Anda Gagal!';
+    
+    // Menggunakan JavaScript untuk kembali ke halaman sebelumnya
+    echo '<script>window.history.back();</script>';
+    exit(); // Pastikan untuk keluar dari skrip setelah redirect
+}
+      } else {
+   // Tidak sesuai, redirect ke halaman yang sesuai
+    $_SESSION['gagal'] = 'Opps, Anda Gagal!';
+    
+    // Menggunakan JavaScript untuk kembali ke halaman sebelumnya
+    echo '<script>window.history.back();</script>';
+    exit(); // Pastikan untuk keluar dari skrip setelah redirect
+}
+?>
