@@ -19,11 +19,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (mysqli_query($koneksi, $query)) {
             // Lanjutkan dengan query untuk mengupdate tanggal di tabel 'premium' berdasarkan status
             if ($status == 1) {
-                $query_premium = "UPDATE premium SET tgl_e = NULL WHERE id_user = '$id_user'";
+                $query_premium = "UPDATE premium SET id_admin = '1', tgl_e = NULL WHERE id_user = '$id_user'";
             } elseif ($status == 2) {
                 date_default_timezone_set('Asia/Jakarta');
                 $currentDateTime = date('Y-m-d H:i:s');
-                $query_premium = "UPDATE premium SET tgl_e = '$currentDateTime' WHERE id_user = '$id_user'";
+                $query_premium = "UPDATE premium SET id_admin = '1', tgl_e = '$currentDateTime' WHERE id_user = '$id_user'";
             }
 
             if (mysqli_query($koneksi, $query_premium)) {
