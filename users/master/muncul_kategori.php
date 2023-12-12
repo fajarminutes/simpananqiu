@@ -15,7 +15,7 @@ switch ($transaksi) {
             echo '      <h5 class="card-title text-bold mb-2">Nama Kategori</h5>';
             echo '      <p class="card-text nama_kategori" data-id="' . $d['id_kategori'] . '">' . $d['nama_kategori'] . '</p>';
             echo '      <p class="card-text id_user" style="display:none;">' . $d['id_user'] . '</p>';
-            echo '      <p class="card-text id_admin" style="display:none;">' . $d['id_admin'] . '</p>';
+            
             echo '      <p class="card-text transaksi" style="display:none;">' . $d['transaksi'] . '</p>';
             echo '      <a href="#" class="btn btn-warning edit-category"><i class="fa fa-pen"></i></a>';
             echo '     <a href="#" class="btn btn-danger delete-category" data-id="' . $d['id_kategori'] . '"><i class="fa fa-trash"></i></a>';
@@ -38,7 +38,7 @@ switch ($transaksi) {
             echo '      <h5 class="card-title text-bold mb-2">Nama Kategori</h5>';
             echo '      <p class="card-text nama_kategori" data-id="' . $d['id_kategori'] . '">' . $d['nama_kategori'] . '</p>';
             echo '      <p class="card-text id_user" style="display:none;">' . $d['id_user'] . '</p>';
-            echo '      <p class="card-text id_admin" style="display:none;">' . $d['id_admin'] . '</p>';
+            
             echo '      <p class="card-text transaksi" style="display:none;">' . $d['transaksi'] . '</p>';
             echo '      <a href="#" class="btn btn-warning edit-category"><i class="fa fa-pen"></i></a>';
             echo '     <a href="#" class="btn btn-danger delete-category" data-id="' . $d['id_kategori'] . '"><i class="fa fa-trash"></i></a>';

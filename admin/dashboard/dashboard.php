@@ -10,7 +10,7 @@ include "../view/navbar_t.php";
 include "../view/sidebar_t.php";
 ?>
 <?php
-$qU = mysqli_query($koneksi, "SELECT * FROM users");
+$qU = mysqli_query($koneksi, "SELECT * FROM premium");
 $users = mysqli_num_rows($qU);
 $qC = mysqli_query($koneksi, "SELECT * FROM kontak");
 $kontak = mysqli_num_rows($qC);

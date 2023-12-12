@@ -260,6 +260,106 @@ function Alur() {
   // Memanggil fungsi pembaruan setiap 1 detik
   setInterval(Alur, 1000);
 </script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Ambil nilai input total saat halaman dimuat
+    let initialTotalValue = document.querySelector('.total').value;
+
+    // Setel nilai yang sesuai ke input nilai_total pada saat halaman dimuat
+    let nilaiTotalInput = document.querySelector('.nilai_total');
+    nilaiTotalInput.value = formatCurrencyWithSymbol(initialTotalValue);
+
+    // Setel nilai yang sesuai ke input nilai_total2 pada saat halaman dimuat
+    let nilaiTotalInputTransaksi = document.querySelector('.nilai_total2');
+    nilaiTotalInputTransaksi.value = initialTotalValue;
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Ambil nilai input total saat halaman dimuat
+    let initialTotalValue = document.querySelector('.total2').value;
+
+    // Setel nilai yang sesuai ke input nilai_pengisian pada saat halaman dimuat
+    let nilaiTotalInput = document.querySelector('.nilai_pengisian');
+    nilaiTotalInput.value = formatCurrencyWithSymbol(initialTotalValue);
+
+    // Setel nilai yang sesuai ke input nilai_total3 pada saat halaman dimuat
+    let nilaiTotalInputTransaksi = document.querySelector('.nilai_total3');
+    nilaiTotalInputTransaksi.value = initialTotalValue;
+});
+
+function TambahDataConvert(inputElement) {
+    // Ambil nilai input total
+    let inputTotal = inputElement.value;
+
+    // Hilangkan karakter non-numeric dari input (misal: ,)
+    let numericValue = inputTotal.replace(/[^\d]/g, '');
+
+    // Setel nilai yang sesuai ke input nominal_total
+    let nilaiTotalInput = inputElement.closest('.form-group').querySelector('.nominal_total');
+    nilaiTotalInput.value = numericValue;
+
+    // Format nilai sebagai mata uang dengan menggunakan fungsi rupiah
+    let formattedValue = "Rp " + addThousandSeparator(numericValue);
+
+    // Setel nilai yang diformat kembali ke input total
+    inputElement.value = formattedValue;
+}
+
+function convertCurrency(inputElement) {
+    // Ambil nilai input total
+    let inputTotal = inputElement.value;
+
+    // Hilangkan karakter non-numeric dari input (misal: ,)
+    let numericValue = inputTotal.replace(/[^\d]/g, '');
+
+    // Setel nilai yang sesuai ke input nilai_total
+    let nilaiTotalInput = inputElement.closest('.form-group').querySelector('.nilai_total');
+    nilaiTotalInput.value = formatCurrency(numericValue);
+
+    // Setel nilai yang sesuai ke input nilai_total2
+    let nilaiTotalInputTransaksi = inputElement.closest('.form-group').querySelector('.nilai_total2');
+    nilaiTotalInputTransaksi.value = numericValue;
+
+    // Tampilkan "Rp" secara otomatis pada input total
+    inputElement.value = formatCurrencyWithSymbol(numericValue);
+}
+
+
+function ConvertNominal(inputElement) {
+    // Ambil nilai input total
+    let inputTotal = inputElement.value;
+
+    // Hilangkan karakter non-numeric dari input (misal: ,)
+    let numericValue = inputTotal.replace(/[^\d]/g, '');
+
+    // Setel nilai yang sesuai ke input nilai_pengisian
+    let nilaiTotalInput = inputElement.closest('.form-group').querySelector('.nilai_pengisian');
+    nilaiTotalInput.value = formatCurrency(numericValue);
+
+    // Setel nilai yang sesuai ke input nilai_total3
+    let nilaiTotalInputTransaksi = inputElement.closest('.form-group').querySelector('.nilai_total3');
+    nilaiTotalInputTransaksi.value = numericValue;
+
+    // Tampilkan "Rp" secara otomatis pada input total
+    inputElement.value = formatCurrencyWithSymbol(numericValue);
+}
+
+
+const addThousandSeparator = (number) => {
+    // Menggunakan regex untuk menambahkan pemisah ribuan
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+};
+
+const formatCurrency = (number) => {
+    // Menggunakan regex untuk menambahkan pemisah ribuan
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+};
+
+const formatCurrencyWithSymbol = (number) => {
+    // Menggunakan regex untuk menambahkan pemisah ribuan dan menyertakan simbol "Rp"
+    return "Rp " + number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+};
+</script>
                     
                   </div>
                   <!-- /.tab-pane -->
@@ -277,9 +377,10 @@ function Alur() {
                         </div>
                       </div>
                       <div class="form-group row">
-                        <label for="noninal" class="col-sm-2 col-form-label">Nominal</label>
+                        <label for="nominalaja" class="col-sm-2 col-form-label">Nominal</label>
                         <div class="col-sm-10">
-                          <input type="number" class="form-control" name="nominal" id="nominal" placeholder="Nominal">
+                          <input type="text" class="form-control" name="nominalaja" id="nominalaja" placeholder="Nominal" oninput="TambahDataConvert(this)">
+    <input type="hidden" class="form-control nominal_total"  name="nominal" id="nominal">
                         </div>
                       </div>
                       <div class="form-group row">
@@ -467,8 +568,11 @@ $('#catat-tabungan').on('click', '.delete-catat', function() {
                             </div>
 
                             <div class="form-group">
-                                <label for="target_tabungan">Target Tabungan</label>
-                                <input type="number" class="form-control" value="<?= $row['target'] ?>" name="target_tabungan" id="target_tabungan" placeholder="Masukkan Nama Tabungan">
+                                <label for="target_ngisi">Target Tabungan</label>
+                               
+    <input type="text" class="form-control nilai_total" name="target_ngisi" id="target_ngisi" oninput="convertCurrency(this)">
+    <input type="hidden" value="<?= $row['target'] ?>" class="form-control total" placeholder="Masukkan Total">
+    <input type="hidden" value="<?= $row['target'] ?>" class="form-control nilai_total2" id="target_tabungan" placeholder="Masukkan Total">
                             </div>
 
                             </div>
@@ -484,9 +588,12 @@ $('#catat-tabungan').on('click', '.delete-catat', function() {
                 </div>
                   
                <div class="form-group">
-    <label for="nominal_pengisian">Nominal Pengisian</label>
+    <label for="pengisian_nominal">Nominal Pengisian</label>
     <div class="input-group">
-        <input type="number" name="nominal_pengisian" value="<?= $row['nominal'] ?>" id="nominal_pengisian" class="form-control">
+        <!-- <input type="number" name="nominal_pengisian" value="<?= $row['nominal'] ?>" id="nominal_pengisian" class="form-control"> -->
+        <input type="text" class="form-control nilai_pengisian" name="pengisian_nominal" id="pengisian_nominal" oninput="ConvertNominal(this)">
+    <input type="hidden" value="<?= $row['nominal'] ?>" class="form-control total2" placeholder="Masukkan Total">
+    <input type="hidden" value="<?= $row['nominal'] ?>" class="form-control nilai_total3" id="nominal_pengisian" placeholder="Masukkan Total">
         <div class="input-group-append">
             <span class="input-group-text"><i class="fas fa-calendar"></i></span>
         </div>

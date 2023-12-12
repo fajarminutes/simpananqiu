@@ -136,9 +136,56 @@ include "../view/sidebar_t.php";
                             </div>
 
                             <div class="form-group">
-                                <label for="target_tabungan">Target Tabungan</label>
-                                <input type="number" class="form-control"  name="target_tabungan" id="target_tabungan" placeholder="Masukkan Nama Tabungan">
+                                <label for="target">Target Tabungan</label>
+                                <input type="text" class="form-control"  id="target" placeholder="Masukkan Target Tabungan" oninput="convertCurrency(this)">
+    <input type="hidden" class="form-control nilai_total"  name="target_tabungan" id="target_tabungan">
                             </div>
+
+                            <script>
+function convertCurrency(inputElement) {
+    // Ambil nilai input total
+    let inputTotal = inputElement.value;
+
+    // Hilangkan karakter non-numeric dari input (misal: ,)
+    let numericValue = inputTotal.replace(/[^\d]/g, '');
+
+    // Setel nilai yang sesuai ke input nilai_total
+    let nilaiTotalInput = inputElement.closest('.form-group').querySelector('.nilai_total');
+    nilaiTotalInput.value = numericValue;
+
+    // Format nilai sebagai mata uang dengan menggunakan fungsi rupiah
+    let formattedValue = "Rp " + addThousandSeparator(numericValue);
+
+    // Setel nilai yang diformat kembali ke input total
+    inputElement.value = formattedValue;
+}
+
+function convertCurrencyNominal(inputElement) {
+    // Ambil nilai input total
+    let inputTotal = inputElement.value;
+
+    // Hilangkan karakter non-numeric dari input (misal: ,)
+    let numericValue = inputTotal.replace(/[^\d]/g, '');
+
+    // Setel nilai yang sesuai ke input nominal_ngisi
+    let nilaiTotalInput = inputElement.closest('.form-group').querySelector('.nominal_ngisi');
+    nilaiTotalInput.value = numericValue;
+
+    // Format nilai sebagai mata uang dengan menggunakan fungsi rupiah
+    let formattedValue = "Rp " + addThousandSeparator(numericValue);
+
+    // Setel nilai yang diformat kembali ke input total
+    inputElement.value = formattedValue;
+}
+
+const addThousandSeparator = (number) => {
+    // Menggunakan regex untuk menambahkan pemisah ribuan
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+};
+
+
+
+</script>
 
                             </div>
 
@@ -153,9 +200,10 @@ include "../view/sidebar_t.php";
                 </div>
                   
                <div class="form-group">
-    <label for="nominal_pengisian">Nominal Pengisian</label>
+    <label for="nominal_ngisi">Nominal Pengisian</label>
     <div class="input-group">
-        <input type="number" name="nominal_pengisian" id="nominal_pengisian" class="form-control">
+        <input type="text" name="nominal_ngisi" placeholder="Masukkan Nominal Pengisian" id="nominal_ngisi" class="form-control" oninput="convertCurrencyNominal(this)">
+    <input type="hidden" class="form-control nominal_ngisi"  name="nominal_pengisian" id="nominal_pengisian">
         <div class="input-group-append">
             <span class="input-group-text"><i class="fas fa-calendar"></i></span>
         </div>

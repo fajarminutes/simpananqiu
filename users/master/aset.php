@@ -123,8 +123,8 @@ include "../view/sidebar_t.php";
 
                     <!-- Form -->
  <form id="kategoriForm" class="Kategori">
-                                <input type="hidden" class="form-control" required name="id_user" id="id_user"  value="<?= $id_users ?>">
-                                <input type="hidden" class="form-control" required name="status" id="status"  value="<?= $all['status'] ?>">
+                                <input type="hidden" class="form-control"  name="id_user" id="id_user"  value="<?= $id_users ?>">
+                                <input type="hidden" class="form-control"  name="status" id="status"  value="<?= $all['status'] ?>">
 
                                  <div class="form-group">
                   <label>Transaksi</label>
@@ -147,19 +147,50 @@ include "../view/sidebar_t.php";
 
                             <div class="form-group">
                                 <label for="nama">Nama Aset</label>
-                                <input type="text" class="form-control" required name="nama_aset" id="nama" placeholder="Masukkan Nama Aset">
+                                <input type="text" class="form-control"  name="nama_aset" id="nama" placeholder="Masukkan Nama Aset">
                             </div>
 
                             <div class="form-group">
-                                <label for="total">Total</label>
-                                <input type="number" class="form-control" required name="total_aset" id="total" placeholder="Masukkan Total">
-                            </div>
+    <label for="total">Total</label>
+    <input type="text" class="form-control total"  name="total_aset" placeholder="Masukkan Total" oninput="convertCurrency(this)">
+    <input type="hidden" class="form-control nilai_total"  name="nilai_aset" id="nilai_aset">
+</div>
+
+<script>
+function convertCurrency(inputElement) {
+    // Ambil nilai input total
+    let inputTotal = inputElement.value;
+
+    // Hilangkan karakter non-numeric dari input (misal: ,)
+    let numericValue = inputTotal.replace(/[^\d]/g, '');
+
+    // Setel nilai yang sesuai ke input nilai_total
+    let nilaiTotalInput = inputElement.closest('.form-group').querySelector('.nilai_total');
+    nilaiTotalInput.value = numericValue;
+
+    // Format nilai sebagai mata uang dengan menggunakan fungsi rupiah
+    let formattedValue = "Rp " + addThousandSeparator(numericValue);
+
+    // Setel nilai yang diformat kembali ke input total
+    inputElement.value = formattedValue;
+}
+
+const addThousandSeparator = (number) => {
+    // Menggunakan regex untuk menambahkan pemisah ribuan
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+};
+
+
+
+</script>
+
+
 
                             <div class="form-group">
                                 <label for="deskripsi">Deskripsi</label>
                               <textarea class="form-control" rows="3" id="deskripsi" name="deskripsi_aset" placeholder="Masukkan Deskripsi"></textarea>
                             </div>
-                            <button type="button" id="simpanAset" class="btn btn-primary mt-3">Simpan</button>
+                            <button type="submit" class="btn btn-primary mt-3">Simpan</button>
                            <button type="button" class="btn btn-success mt-3" id="tombolKembali">Kembali</button>
 
                         </form>
@@ -199,13 +230,14 @@ if (window.innerWidth <= 768) {
 
  $(document).ready(function () {
     // Event saat tombol "Simpan" diklik
-    $("#simpanAset").on("click", function () {
+       $('#kategoriForm').on('submit', function(e) {
+    e.preventDefault(); // Menghentikan tindakan default submit form
         var idUsers = $("#id_user").val(); // Dapatkan nilai input id_user
         var transaksi = $("#transaksi").val(); // Dapatkan nilai input transaksi
         var status = $("#status").val(); // Dapatkan nilai input status
         var grup = $("#grup").val(); // Dapatkan nilai input grup
         var namaAset = $("#nama").val(); // Dapatkan nilai input nama aset
-        var totalAset = $("#total").val(); // Dapatkan nilai input total aset
+        var totalAset = $("#nilai_aset").val(); // Dapatkan nilai input total aset
         var deskripsiAset = $("#deskripsi").val(); // Dapatkan nilai input deskripsi aset
 
         // Kirim permintaan Ajax

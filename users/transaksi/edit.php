@@ -139,7 +139,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         WHERE id_keuangan = $id_keuangan";
 
         if (mysqli_query($koneksi, $query)) {
-            echo "Data keuangan berhasil diubah.";
+           // Update kolom total di tabel aset dengan menambahkan nilai baru
+    $queryUpdateAset = "UPDATE aset SET total = total + $total WHERE id_aset = '$aset' AND id_user = '$id_user'";
+    
+    // Jalankan query untuk melakukan update di tabel aset
+    if (mysqli_query($koneksi, $queryUpdateAset)) {
+       echo "Data keuangan berhasil diubah.";
+    } else {
+        echo "Terjadi kesalahan saat melakukan update total di tabel aset: " . mysqli_error($koneksi);
+    }
         } else {
             echo "Terjadi kesalahan saat mengubah data keuangan: " . mysqli_error($koneksi);
         }
@@ -160,7 +168,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         WHERE id_keuangan = $id_keuangan";
 
         if (mysqli_query($koneksi, $query)) {
-            echo "Data keuangan berhasil diubah.";
+            // Update kolom total di tabel aset dengan menambahkan nilai baru
+    $queryUpdateAset = "UPDATE aset SET total = total + $total WHERE id_aset = '$aset' AND id_user = '$id_user'";
+    
+    // Jalankan query untuk melakukan update di tabel aset
+    if (mysqli_query($koneksi, $queryUpdateAset)) {
+       echo "Data keuangan berhasil diubah.";
+    } else {
+        echo "Terjadi kesalahan saat melakukan update total di tabel aset: " . mysqli_error($koneksi);
+    }
         } else {
             echo "Terjadi kesalahan saat mengubah data keuangan: " . mysqli_error($koneksi);
         }

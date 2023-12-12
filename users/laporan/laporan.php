@@ -75,8 +75,8 @@ if (isset($_SESSION['gagal'])) {
                 </div>
               </div>
               <button type="submit" class="btn btn-primary" name="tampilkan">Tampilkan</button>
-              <a href="print.php<?= isset($_GET['tampilkan']) ? '?tampilkan&date_range=' . $_GET['date_range'] : '' ?>" target="_blank" class="btn btn-primary"><i class="fas fa-print"></i>Print</a>
-              <a href="pdf.php<?= isset($_GET['tampilkan']) ? '?tampilkan&date_range=' . $_GET['date_range'] : '' ?>"  class="btn btn-success"><i class="fas fa-download"></i>Download</a>
+              <a href="print.php<?= isset($_GET['tampilkan']) ? '?tampilkan&date_range=' . $_GET['date_range'] : '' ?>" target="_blank" class="btn btn-primary"><i class="fas fa-print"></i> Print</a>
+              <a href="pdf.php<?= isset($_GET['tampilkan']) ? '?tampilkan&date_range=' . $_GET['date_range'] : '' ?>"  class="btn btn-success"><i class="fas fa-download"></i> Download</a>
 
               </div>
               </form>

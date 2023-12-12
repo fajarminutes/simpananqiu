@@ -15,6 +15,7 @@ if (isset($_SESSION['id_keuangan'])) {
     $id_keuangan = $_SESSION['id_keuangan'];
 ?>
 
+
  <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -26,7 +27,7 @@ if (isset($_SESSION['id_keuangan'])) {
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="">Home</a></li>
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
               <li class="breadcrumb-item active">Transaksi</li>
             </ol>
           </div>
@@ -39,7 +40,7 @@ if (isset($_SESSION['id_keuangan'])) {
       <div class="container-fluid">
         <div class="row">
           <div class="col-12">
-            <div class="card card-primary card-tabs">
+             <div class="card card-primary card-tabs">
               <div class="card-header p-0 pt-1">
                 <ul class="nav nav-tabs" id="custom-tabs-two-tab" role="tablist">
                   <li class="pt-2 px-3"><h3 class="card-title">Ubah Data</h3></li>
@@ -52,8 +53,11 @@ if (isset($_SESSION['id_keuangan'])) {
                </div>
               <!-- /.card-header -->
              
-            <div class="card-body">
-<?php 
+
+  
+              <div class="card-body">
+                <div class="container-fluid ">
+              <?php 
       $query_edit = mysqli_query($koneksi, "SELECT * FROM keuangan WHERE id_keuangan = '$id_keuangan' AND  id_user = '$id_users'");
     $edit = mysqli_fetch_array($query_edit) or die(mysqli_error($koneksi));
       ?>
@@ -113,7 +117,10 @@ if (isset($_SESSION['id_keuangan'])) {
                   <select name="aset_edit" class="form-control select2 aset-edit"  style="width:100%;">
                 <?php 
                 $id_aset = $edit['id_aset'];
-                $query_aset = mysqli_query($koneksi, "SELECT * FROM aset WHERE id_user = '$id_users'");
+                $q_aset = mysqli_query($koneksi, "SELECT * FROM aset WHERE id_aset = $id_aset");
+                $r_aset = mysqli_fetch_array($q_aset);
+                $transaksi = $r_aset['transaksi'];
+                $query_aset = mysqli_query($koneksi, "SELECT * FROM aset WHERE id_user = '$id_users' AND transaksi = '$transaksi'");
 echo '<option value="">Pilih</option>';
                 while($row_aset = mysqli_fetch_array($query_aset)) {
                       $aset_id = $row_aset['id_aset'];
@@ -136,7 +143,7 @@ echo '<option value="">Pilih</option>';
                 <div class="form-group">
   <label for="pilih_tipe">Pilih Tipe</label>
   <select class="form-control select2 pilih_tipe"  style="width:100%;">
-    <option value="">Pilih</option>
+    <option value="pilih">Pilih</option>
     <option value="deskripsi">Deskripsi</option>
     <option value="file">File</option>
   </select>
@@ -148,26 +155,56 @@ echo '<option value="">Pilih</option>';
 </div>
 
 <div class="form-group file-input" style="display: none;">
-  <label for="fileInput_ubah">File</label>
-  <input type="file" class="form-control fileInput_ubah"  name="fileInput_ubah" placeholder="Masukkan File">
+    <label for="fileInput_ubah">File</label>
+    <input type="file" class="form-control fileInput_ubah" name="fileInput_ubah" id="fileInput" accept=".jpg, .jpeg, .png" placeholder="Masukkan File">
+    <div class="text-center mt-3">
+        <?php 
+        $gambarPath = "../../data/img/transaksi/" . $edit['deskripsi']; // Path gambar sesuai dengan data dalam database
+        if (file_exists($gambarPath)) {
+            echo '<img src="../../data/img/transaksi/' . $edit['deskripsi']. '" alt="Gambar" style="max-width: 300px; max-height: 300px;">';
+        } else {
+            echo '<img src="../dist/img/galeri.png" style="max-width: 300px; max-height: 300px;">';
+        }
+        ?>
+    </div>
+</div>
 
-   <div class="text-center mt-3">
-                    <?php 
-                     $gambarPath = "../../data/img/transaksi/" . $edit['deskripsi']; // Path gambar sesuai dengan data dalam database
-                    if (file_exists($gambarPath)) {
-                      echo '<img src="../../data/img/transaksi/' . $edit['deskripsi']. '" alt="Gambar" style="max-width: 300px; max-height: 300px;">';
-                    } else {
-                       echo '<img src="../dist/img/galeri.png" style="max-width: 300px; max-height: 300px;">';
-                    }
-                    ?>
-</div>
-</div>
+<div id="imageValidationMessage" style="display: none; color: red;"></div>
+
+<script>
+document.getElementById("fileInput").addEventListener("change", function() {
+    const fileInput = this;
+    const imageValidationMessage = document.getElementById("imageValidationMessage");
+
+    if (fileInput.files.length > 0) {
+        const selectedFile = fileInput.files[0];
+        const fileExtension = selectedFile.name.split('.').pop().toLowerCase();
+
+        if (fileExtension === "jpg" || fileExtension === "jpeg" || fileExtension === "png") {
+            // File yang dipilih adalah gambar
+            const imgPreview = document.querySelector(".form-group.file-input .text-center img");
+            imgPreview.src = URL.createObjectURL(selectedFile);
+            imageValidationMessage.style.display = "none";
+        } else {
+            // File yang dipilih bukan gambar
+            imageValidationMessage.textContent = "Hanya file gambar (JPG, JPEG, atau PNG) yang diizinkan.";
+            imageValidationMessage.style.display = "block";
+            fileInput.value = ""; // Hapus file yang dipilih
+        }
+    } else {
+        imageValidationMessage.style.display = "none";
+    }
+});
+</script>
+
+
 
 
              
 <div class="form-group">
                         <div class="">
-                        <button type="submit" class="btn btn-primary" name="Ubah">Simpan</button>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                         <a href="transaksi.php"><button type="button" class="btn btn-warning">Kembali</button></a>
 
                         </div>
                       </div>
@@ -177,11 +214,12 @@ echo '<option value="">Pilih</option>';
                  
                 
                 </div>
-              </div>
-              <!-- /.card -->
+               </div>
+                </div>
                   </div>
                
-                  
+                 
+          <!-- /.col -->
         </div>
         <!-- /.row -->
       </div>
@@ -189,14 +227,21 @@ echo '<option value="">Pilih</option>';
     </section>
     <!-- /.content -->
   </div>
-  </div>
-<?php 
-} else {
-  echo '<script>window.location.href = "transaksi.php";</script>';
-}
+
+  <?php
+// Ambil nama gambar dari database
+$namaGambarDariDatabase = $edit['deskripsi'];
 ?>
 
-  <script>
+<script>
+// Menggunakan PHP untuk mengirim nama gambar ke JavaScript
+var namaGambarDariDatabase = "<?php echo $namaGambarDariDatabase; ?>";
+</script>
+
+
+
+
+ <script>
 
           // Edit data
 $('.EditTransaksi').on('submit', function(e) {
@@ -274,17 +319,80 @@ setTimeout(() => {
     });
 });
 
-    $(document).ready(function() {
-    $(".pilih_tipe").change(function() {
-      if ($(this).val() == "deskripsi") {
-        $(".deskripsi-input").show();
-        $(".file-input").hide();
-      } else {
-        $(".deskripsi-input").hide();
-        $(".file-input").show();
-      }
-    });
+
+$(document).ready(function () {
+  $(".pilih_tipe").change(function () {
+    var selectedTipe = $(this).val();
+
+    if (selectedTipe === "deskripsi") {
+      $(".deskripsi-input").show();
+      $(".file-input").hide();
+      // Kosongkan input deskripsi
+       // Mengambil deskripsi dari database yang telah disimpan di dalam elemen input tersembunyi
+      // Cek apakah gambar sesuai dengan deskripsi ada di folder
+var gambarPath = "../../data/img/transaksi/" + namaGambarDariDatabase;
+
+// Buat elemen gambar baru
+var img = new Image();
+img.src = gambarPath;
+
+img.onload = function () {
+  // Gambar sesuai dengan deskripsi ada, tampilkan gambar itu
+  $(".form-group.file-input .text-center img").attr("src", gambarPath);
+  $(".deskripsi_ubah").val(""); // Tampilkan deskripsi yang sesuai
+};
+
+img.onerror = function () {
+  // Gambar sesuai dengan deskripsi tidak ada, tampilkan gambar alternatif
+  $(".form-group.file-input .text-center img").attr("src", "../dist/img/galeri.png");
+  // Tampilkan deskripsi dari var (bisa disesuaikan dengan deskripsi alternatif)
+  $(".deskripsi_ubah").val(namaGambarDariDatabase);
+};
+
+      // Hapus atribut "src" gambar
+      $(".form-group.file-input .text-center img").removeAttr("src");
+    } else if (selectedTipe === "file") {
+      $(".deskripsi-input").hide();
+      $(".file-input").show();
+
+      // Cek apakah gambar sesuai dengan deskripsi ada di folder
+      var gambarPath = "../../data/img/transaksi/" + namaGambarDariDatabase;
+
+      // Buat elemen gambar baru
+      var img = new Image();
+      img.src = gambarPath;
+
+      img.onload = function () {
+        // Gambar sesuai dengan deskripsi ada, tampilkan gambar itu
+        $(".form-group.file-input .text-center img").attr("src", gambarPath);
+      };
+
+      img.onerror = function () {
+        // Gambar sesuai dengan deskripsi tidak ada, tampilkan gambar alternatif
+        $(".form-group.file-input .text-center img").attr("src", "../dist/img/galeri.png");
+      };
+
+
+      // Hapus gambar yang telah dipilih (reset input file)
+      $(".fileInput_ubah").val("");
+      // Sembunyikan pesan validasi gambar jika ada
+      $("#imageValidationMessage").hide();
+    } else {
+      $(".deskripsi-input").hide();
+      $(".file-input").hide();
+      // Kosongkan input deskripsi dan reset input file serta gambar jika ada
+      $(".deskripsi_ubah").val("");
+      $(".fileInput_ubah").val("");
+      // Hapus atribut "src" gambar
+      $(".form-group.file-input .text-center img").removeAttr("src");
+      // Sembunyikan pesan validasi gambar jika ada
+      $("#imageValidationMessage").hide();
+    }
   });
+});
+
+
+
 
    
 
@@ -359,10 +467,14 @@ $('.kategori-edit').on('change', function () {
 
 </script>
 
-
-
-
    <?php 
 
 include "../view/footer_t.php";
+?>
+
+<?php 
+} else {
+  $_SESSION['gagal'] = 'Opps, Anda Gagal!';
+  echo '<script>window.location.href = "transaksi.php";</script>';
+}
 ?>

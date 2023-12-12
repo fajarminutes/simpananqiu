@@ -13,8 +13,10 @@ $jumlah = $result['jumlah_pesan'];
 
 while ($row = mysqli_fetch_array($query_data)) {
     // Cek apakah status belum terbaca
-    if ($row['status'] === '1') {
+    if ($row['status'] == NULL) {
         $belum_terbaca++;
+    } else if($row['status'] === '1') {
+      $belum_terbaca++;
     }
 
      if ($row['status'] === '2') {

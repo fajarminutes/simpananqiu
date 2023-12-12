@@ -330,13 +330,38 @@ function setUpdateId(id_keuangan) {
 </div>
 
 
+ <div class="form-group">
+    <label for="total_transaksi">Total</label>
+    <input type="text" class="form-control total"  name="total_transaksi" placeholder="Masukkan Total" oninput="convertCurrency(this)">
+    <input type="hidden" class="form-control nilai_total"  name="total" id="total">
+</div>
 
-                
+<script>
+function convertCurrency(inputElement) {
+    // Ambil nilai input total
+    let inputTotal = inputElement.value;
 
-                 <div class="form-group">
-                    <label for="total">Total</label>
-                    <input type="number" class="form-control" name="total" id="total" placeholder="Masukkan Total">
-                  </div>
+    // Hilangkan karakter non-numeric dari input (misal: ,)
+    let numericValue = inputTotal.replace(/[^\d]/g, '');
+
+    // Setel nilai yang sesuai ke input nilai_total
+    let nilaiTotalInput = inputElement.closest('.form-group').querySelector('.nilai_total');
+    nilaiTotalInput.value = numericValue;
+
+    // Format nilai sebagai mata uang dengan menggunakan fungsi rupiah
+    let formattedValue = "Rp " + addThousandSeparator(numericValue);
+
+    // Setel nilai yang diformat kembali ke input total
+    inputElement.value = formattedValue;
+}
+
+const addThousandSeparator = (number) => {
+    // Menggunakan regex untuk menambahkan pemisah ribuan
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+};
+
+</script>
+
 
                   <div class="form-group">
                   <label>Kategori</label>
@@ -591,7 +616,9 @@ setTimeout(() => {
 
                  <div class="form-group">
                     <label for="total">Total</label>
-                    <input type="number" class="form-control" name="total_p" id="total_p" placeholder="Masukkan Total">
+                    <input type="text" class="form-control total" placeholder="Masukkan Total"oninput="convertCurrency(this)">
+    <input type="hidden" class="form-control nilai_total"  name="total_p" id="total_p">
+                    
                   </div>
 
                   <div class="form-group">

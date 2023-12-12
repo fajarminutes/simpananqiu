@@ -22,7 +22,7 @@ $jumlah = $result['jumlah_pesan'];
 
 while ($row = mysqli_fetch_array($query_data)) {
     // Cek apakah status belum terbaca
-    if ($row['status'] === NULL) {
+    if ($row['status'] === '1') {
         $belum_terbaca++;
     }
 
@@ -182,7 +182,7 @@ while ($k = mysqli_fetch_array($query)) {
     <td><?= $k['email'] ?></td>
     <td><?= $k['judul'] ?></td>
     <td><?= $k['pesan'] ?></td>
-    <td><?= $k['status'] === '1' ? '<span class="badge_own text-bg-success_own">Terlesaikan</span>' : '<span class="badge_own text-bg-warning_own">Belum Terselesaikan </span>' ?></td>
+    <td><?= $k['status'] === '1' ? '<span class="badge_own text-bg-warning_own">Belum Terlesaikan</span>' : '<span class="badge_own  text-bg-success_own">Terselesaikan </span>' ?></td>
     <td> <a href="#" class="btn btn-danger delete" data-id="<?= $k['id_kontak'] ?>"><i class="fa fa-trash"></i></a></td>
 </tr>
 <?php } ?>

@@ -80,6 +80,7 @@ if (isset($_SESSION['id_keuangan'])) {
 </div>
                     <input type="hidden" class="form-control nilai_transaksi" name="nilai_transaksi">
                     <input type="hidden" class="form-control nilai_kategori" name="nilai_kategori">
+                    <input type="hidden" class="form-control nilai_aset" name="nilai_aset">
 
                     </div>
                     <!-- Date and time -->
@@ -98,10 +99,59 @@ if (isset($_SESSION['id_keuangan'])) {
 
                 
 
-                 <div class="form-group">
-                    <label for="total_edit">Total</label>
-                    <input type="number" value="<?= $edit['total'] ?>"  class="form-control total_edit" name="total_edit" placeholder="Masukkan Total">
-                  </div>
+            <div class="form-group">
+    <label for="total_edit">Total</label>
+    <input type="text" class="form-control nilai_total total_edit" name="total_edit" id="total_edit" oninput="convertCurrency(this)">
+    <input type="hidden" value="<?= $edit['total'] ?>" class="form-control total" placeholder="Masukkan Total">
+    <input type="hidden" value="<?= $edit['total'] ?>" class="form-control nilai_total2" placeholder="Masukkan Total">
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Ambil nilai input total saat halaman dimuat
+    let initialTotalValue = document.querySelector('.total').value;
+
+    // Setel nilai yang sesuai ke input nilai_total pada saat halaman dimuat
+    let nilaiTotalInput = document.querySelector('.nilai_total');
+    nilaiTotalInput.value = formatCurrencyWithSymbol(initialTotalValue);
+
+    // Setel nilai yang sesuai ke input nilai_total2 pada saat halaman dimuat
+    let nilaiTotalInputTransaksi = document.querySelector('.nilai_total2');
+    nilaiTotalInputTransaksi.value = initialTotalValue;
+});
+
+function convertCurrency(inputElement) {
+    // Ambil nilai input total
+    let inputTotal = inputElement.value;
+
+    // Hilangkan karakter non-numeric dari input (misal: ,)
+    let numericValue = inputTotal.replace(/[^\d]/g, '');
+
+    // Setel nilai yang sesuai ke input nilai_total
+    let nilaiTotalInput = inputElement.closest('.form-group').querySelector('.nilai_total');
+    nilaiTotalInput.value = formatCurrency(numericValue);
+
+    // Setel nilai yang sesuai ke input nilai_total2
+    let nilaiTotalInputTransaksi = inputElement.closest('.form-group').querySelector('.nilai_total2');
+    nilaiTotalInputTransaksi.value = numericValue;
+
+    // Tampilkan "Rp" secara otomatis pada input total
+    inputElement.value = formatCurrencyWithSymbol(numericValue);
+}
+
+const formatCurrency = (number) => {
+    // Menggunakan regex untuk menambahkan pemisah ribuan
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+};
+
+const formatCurrencyWithSymbol = (number) => {
+    // Menggunakan regex untuk menambahkan pemisah ribuan dan menyertakan simbol "Rp"
+    return "Rp " + number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+};
+</script>
+
+
+
 
 
                 <div class="form-group">
@@ -112,7 +162,7 @@ if (isset($_SESSION['id_keuangan'])) {
 </div>
 
                
-                <div class="form-group">
+                <!-- <div class="form-group">
                   <label for="aset_edit">Aset</label>
                   <select name="aset_edit" class="form-control select2 aset-edit"  style="width:100%;">
                 <?php 
@@ -133,7 +183,15 @@ echo '<option value="">Pilih</option>';
                 }
                 ?>
                 </select>
-                </div>
+                </div> -->
+
+
+                <div class="form-group">
+  <label>Aset</label>
+  <select class="form-control select2 aset-edit"  style="width: 100%;">
+    <!-- Aset akan dimuat di sini -->
+  </select>
+</div>
 
                 <div class="form-group">
                   <label for="catatan_edit">Catatan</label>
@@ -156,7 +214,7 @@ echo '<option value="">Pilih</option>';
 
 <div class="form-group file-input" style="display: none;">
     <label for="fileInput_ubah">File</label>
-    <input type="file" class="form-control fileInput_ubah" name="fileInput_ubah" id="fileInput" accept=".jpg, .jpeg, .png" placeholder="Masukkan File">
+    <input type="file" class="form-control fileInput_ubah" name="fileInput_ubah" id="fileInput" accept="image/*"capture="environment" onchange="handleFile(this)" placeholder="Masukkan File">
     <div class="text-center mt-3">
         <?php 
         $gambarPath = "../../data/img/transaksi/" . $edit['deskripsi']; // Path gambar sesuai dengan data dalam database
@@ -172,6 +230,19 @@ echo '<option value="">Pilih</option>';
 <div id="imageValidationMessage" style="display: none; color: red;"></div>
 
 <script>
+    function handleFile(input) {
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const imageData = e.target.result;
+                    // Lakukan sesuatu dengan data gambar (misalnya, menampilkan atau mengirimkan ke server)
+                    console.log(imageData);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+        
 document.getElementById("fileInput").addEventListener("change", function() {
     const fileInput = this;
     const imageValidationMessage = document.getElementById("imageValidationMessage");
@@ -252,8 +323,8 @@ const id_keuangan = $('.id_keuangan').val();
 const nilai_transaksi = $('.nilai_transaksi').val();
 const nilai_kategori = $('.nilai_kategori').val();
 const tanggal_waktu_edit = $('.tanggal_waktu_edit').val();
-const total_edit = $('.total_edit').val();
-const aset_edit = $('.aset-edit').val();
+const total_edit = $('.nilai_total2').val();
+const aset_edit = $('.nilai_aset').val();
 const catatan_edit = $('.catatan_edit').val();
 const deskripsi_ubah = $('.deskripsi_ubah').val();
 const fileInput_ubah = $('.fileInput_ubah')[0].files[0];
@@ -419,6 +490,13 @@ $('.kategori-edit').on('change', function () {
     $('.nilai_kategori').val(selectedKategori);
 });
 
+$('.aset-edit').on('change', function () {
+    var selectedKategori = $(this).val();
+    
+    // Ganti nilai dari input dengan nama "nilai_aset" dengan nilai yang sesuai
+    $('.nilai_aset').val(selectedKategori);
+});
+
   // Saat halaman dimuat
   $('.transaksi-keuangan').each(function () {
     var savedTransaksi = $(this).data('transaksi');
@@ -439,6 +517,26 @@ $('.kategori-edit').on('change', function () {
       }
     });
   });
+
+   $('.transaksi-keuangan').each(function () {
+    var savedTransaksi = $(this).data('transaksi');
+    var id_user = $('.id_user').val();
+    
+    // Set opsi yang dipilih berdasarkan transaksi yang tersimpan dalam data
+    $(this).val(savedTransaksi);
+    
+    // Kirim permintaan AJAX untuk memuat aset berdasarkan transaksi
+    var asetSelect = $(this).closest('form').find('.aset-edit'); // Cari elemen aset di dalam form terkait
+    $.ajax({
+      type: 'GET',
+      url: 'get_aset.php', // Ganti dengan URL yang sesuai untuk mengambil aset
+      data: { transaksi: savedTransaksi, id_user: id_user }, // Kirim jenis transaksi dan id_user ke server
+      success: function (response) {
+        // Perbarui pilihan aset dengan hasil dari server
+        asetSelect.html(response);
+      }
+    });
+  });
   
   // Ketika jenis transaksi berubah
   $('.transaksi-keuangan').on('change', function () {
@@ -454,6 +552,25 @@ $('.kategori-edit').on('change', function () {
       success: function (response) {
         // Perbarui pilihan kategori dengan hasil dari server
         kategoriSelect.html(response);
+      }
+    });
+  });
+
+
+   // Ketika jenis transaksi berubah
+  $('.transaksi-keuangan').on('change', function () {
+    var selectedTransaksi = $(this).val();
+    var id_user = $('.id_user').val();
+    
+    // Kirim permintaan AJAX untuk mendapatkan aset
+    var asetSelect = $(this).closest('form').find('.aset-edit'); // Cari elemen aset di dalam form terkait
+    $.ajax({
+      type: 'GET',
+      url: 'get_aset.php', // Ganti dengan URL yang sesuai untuk mengambil aset
+      data: { transaksi: selectedTransaksi, id_user: id_user }, // Kirim jenis transaksi dan id_user ke server
+      success: function (response) {
+        // Perbarui pilihan aset dengan hasil dari server
+        asetSelect.html(response);
       }
     });
   });
